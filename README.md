@@ -20,9 +20,10 @@ Jones’s and his [GitHub Gist page](http://bit.ly/1kqF5R0).
 Installation
 ------------
 
-Clone and open `index.php`:
+Clone the repository and open `index.php`:
 
-    # On server
+    # On server (e.g., Apache with PHP)
+    $ cd ~/public_html # For example
     $ git clone https://github.com/mbogosian/balanced-hangman
     ...
 
@@ -31,12 +32,9 @@ Clone and open `index.php`:
 
 Or on OS X:
 
-    # On server
+    $ cd ~/Sites # For example
     $ git clone https://github.com/mbogosian/balanced-hangman
-    ...
-
-    # On client
-    $ open http://.../balanced-hangman/index.php
+    $ open http://localhost/~[username]/balanced-hangman/index.php
 
 Known Issues
 ------------
@@ -115,7 +113,7 @@ Known Issues
   writing, I have found it is missing “superpigmentation” and “bryce”). In
   these cases, it can actually lead the user astray.
 
-- Enabling hints mode using Firefox on OS X may result in audio
+- Enabling **Hints Mode**&trade; using Firefox on OS X may result in audio
   anomalies. I’m pretty sure this is a bug in Firefox.
 
 <a name="Notes On The Architecture"></a>Notes On The Architecture
@@ -143,8 +141,8 @@ Basically, `index.php` (and the DOM) serves as the view. The
 `Bahaman.Screen` class kind of serves the role of the controller. The
 `Bahaman.Client` class serves as an abstraction to both parts of the
 application logic, namely the hangman server (through a hosted proxy; see
-[Server Issues](#Server Issues)) as well as my homegrown script to enable
-**hints mode**&trade;.
+[Server Issues](#Server Issues)) as well as my homegrown script to support
+**Hints Mode**&trade;.
 
 That’s about it.
 
@@ -190,7 +188,7 @@ The general conventions I’ve discovered are as follows:
   > ...
   > email_address=[RCF2822 compliant e-mail address]&amp;password=[cleartext password]
 
-  Or (alternatively)::
+  Or (alternatively):
 
   > ...
   > Content-Type: application/json
@@ -257,7 +255,7 @@ implementation:
 - The server appears to allow nonsensical guesses (i.e., things that would
   *never* appear in an answer, like `"*"` or `"\u0000"`). Assuming the words
   come from something like `/usr/share/dict/words`, there’s a *very* good
-  chance that only letters are used::
+  chance that only letters are used:
 
     ```
     % python -c 'with open("/usr/share/dict/words") as f: print repr("".join(sorted(set(f.read().lower()))))'
