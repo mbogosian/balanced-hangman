@@ -2,7 +2,15 @@
 
 #-*-mode: python; encoding: utf-8-*-======================================
 """
-  TODO
+  CGI script to take a word with one or more wildcards (non-letters; e.g.,
+  "sh*tty" or "a..hole")* and a string of zero or more letters that are
+  necessarily not part of the completed word, and return a JSON object
+  containing list of candidate words that match the pattern as well as a
+  "frequency" of letters, where frequency is scaled between 0.0 and 1.0
+  and is reflective of the number of candidate words in which the letter
+  appears.
+
+  * From "shotty" or "armhole". Get your mind out of the gutter!
 
   Copyright (c) 2014 Matt Bogosian <mtb19@columbia.edu>.
 
@@ -49,9 +57,9 @@ def _main():
 
         words_file = None
 
-    q = urlparse.parse_qs(os.environ.get('QUERY_STRING', ''))
+    q = urlparse.parse_qs(os.environ.get('QUERY_STRING', ''), keep_blank_values = True)
     word = q.get('word', ( None, ))[0]
-    misses = q.get('misses', ( None, ))[0]
+    misses = q.get('misses', ( '', ))[0]
     data = {}
 
     if words_file is None:
@@ -59,10 +67,10 @@ def _main():
         data['message'] = 'no dictionary found'
     elif word is None:
         status = _STATUS_400
-        data['message'] = 'missing argument: "word"'
-    elif misses is None:
+        data['message'] = 'missing parameter: "word"'
+    elif len(word) == 0:
         status = _STATUS_400
-        data['message'] = 'missing argument: "misses"'
+        data['message'] = '"word" parameter must have at least one character'
     else:
         def lettersOrPeriods(a_word):
             for c in word:
@@ -89,11 +97,10 @@ def _main():
             status = _STATUS_200
             matches = list(set(( match.lower() for match in output.split(os.linesep) if match )))
             matches.sort()
-            data['candidates'] = matches
             histogram = {}
 
             for match in matches:
-                for c in match:
+                for c in set(match):
                     if c not in guesses:
                         histogram[c] = histogram.get(c, 0) + 1
 
@@ -102,6 +109,7 @@ def _main():
             else:
                 max_freq = 1
 
+            data['candidates'] = ' '.join(matches)
             data['frequencies'] = dict(( ( k, v / max_freq ) for k, v in histogram.iteritems() ))
         else:
             status = _STATUS_500

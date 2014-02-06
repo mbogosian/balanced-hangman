@@ -56,7 +56,7 @@
     display: inline-block;
     font-size: 400%;
     opacity: 0;
-    text-shadow: 0px 1px 3px #fff;
+    text-shadow: 0px 3px 5px #666;
     //background: transparent url('media/requiem_for_a_dream-160x86-0:11-12:104,105:13-106:127.png') 0 -0px no-repeat;
     //height: 86px;
     //width: 160px;
@@ -64,6 +64,7 @@
 
 #word {
     font-family: Special Elite, monospace;
+    text-shadow: 0px 3px 5px #666;
     text-transform: uppercase; 
 }
 
@@ -84,9 +85,13 @@
     color: #6c6;
 }
 
+#guesses button.best_hint {
+    color: #33f;
+    text-decoration: underline;
+}
+
 #guesses button.hint {
     color: #33c;
-    text-decoration: underline;
 }
 
 #guesses button[disabled].hint {
@@ -97,15 +102,21 @@
     color: #c66;
 }
 
-#cheat_anim {
+#cheat {
     color: #666;
     font-style: italic;
     text-align: center;
 }
 
-#cheat_anim div span:last-of-type,
-        #cheat_anim div:last-of-type {
+#cheat_code > span:last-of-type,
+        #hints {
     display: none;
+}
+
+#hints {
+    font-size: small;
+    height: 6.0em;
+    width: 80%;
 }
 
 #prisoners {
@@ -233,7 +244,7 @@
 }
 
 #copyright a {
-    color: #ff9;
+    color: #fe9;
     text-decoration: inherit;
 }
 
@@ -266,7 +277,7 @@
 }
 
 #nojs {
-    background-color: #ffc;
+    background-color: #fe9;
     border: 1px solid #333;
     bottom: 10%;
     display: block;
@@ -389,7 +400,7 @@ a.egg_a,
 }
 
 .pending {
-    color: #cc3;
+    color: #fc3;
 }
 
 .small {
@@ -414,7 +425,7 @@ body {
 h1,
         h2 {
     font-family: Rock Salt, serif;
-    line-height: 100%;
+    line-height: 1.5;
     text-align: center;
 }
 
@@ -424,7 +435,9 @@ h1 em,
 }
 
 h1 {
+    color: #fc3;
     font-size: 150%;
+    text-shadow: 0px 3px 5px #666;
 }
 
 h2 {

@@ -22,15 +22,21 @@ Installation
 
 Fork and open `index.html`:
 
+    # On server
     $ git clone https://github.com/mbogosian/balanced-hangman
     ...
-    $ firefox balanced-hangman/index.html
+
+    # On client
+    $ firefox http://.../balanced-hangman/index.php
 
 Or on OS X:
 
+    # On server
     $ git clone https://github.com/mbogosian/balanced-hangman
     ...
-    $ open balanced-hangman/index.html
+
+    # On client
+    $ open http://.../balanced-hangman/index.php
 
 Known Issues
 ------------
@@ -47,7 +53,16 @@ Known Issues
 - I will reiterate this again later, but I am *not* very experienced in UI
   design/implementation (see [Notes On The Architecture](#Notes On The
   Architecture)). As such, I have likely made poor decisions that result
-  in some unpleasant user experiences.
+  in some unpleasant user experiences. Also, this is my first real foray
+  into client-side JavaScript and jQuery. I have likely abused either or
+  both.
+
+- There are probably several ways to save on the number of DOM/CSS
+  manipulations and server round-trips. This implementation is a prototype
+  (i.e., it attempts to get things functionally acceptable). Not much
+  effort has been made to tune performance. Hint mode, for example, is
+  really labor intensive on the server side. It would probably benefit
+  from some kind of short-term caching mechanism.
 
 - The authentication model in the server reference implementation doesn’t
   jive with the retry logic in many libraries’ authentication handlers
@@ -57,7 +72,15 @@ Known Issues
 
 - The UI does not expose functionality to change one’s account password,
   even though such functionality exists on the server. This should be easy
-  enough to add, perhaps through the settings screen.
+  enough to add, perhaps through the settings screen. You can currently
+  trick the application into changing an account password by taking
+  advantage of an apparent server bug (see [Observations About The Server
+  Reference Implementation](#Observations About The Server Reference
+  Implementation)). To do this, attempt to log in using a bad e-mail
+  address or password, which will enable the “Create new” button in the
+  account screen. Then you can change the e-mail address to an existing
+  account, at which point clicking the “Create new” button will change the
+  password for that account.
 
 - No thought has been given to [I18n/L10n](http://bit.ly/1cktcE8). This is
   probably bad. In my experience, this is difficult to retrofit through
@@ -75,7 +98,14 @@ Known Issues
   blindly follows whatever protocol is designed.
 
 - While it should theoretically work, this has *not* been tested on
-  Internet Explorer in any way, shape, or form.
+  Internet Explorer in any way, shape, or form. If this were anything more
+  than an extended interview, I would focus on cross browser
+  compatibility. But it just isn’t sexy enough for me to do right now.
+
+- The [word library that I use to support hint
+  mode](file:///usr/shar/dict/words) is missing some words (as of this
+  writing, I have found it is missing “superpigmentation” and “bryce”). In
+  these cases, it can actually lead the user astray.
 
 Notes On The Architecture
 -------------------------
@@ -83,7 +113,9 @@ Notes On The Architecture
 Let me start by saying this was a learning experience for me. I am *not* a
 UI designer, nor do I have any real experience implementing a full
 [MVC](http://bit.ly/1lIZSQl) stack. (I’ve played around with a few toy
-demos, but that’s about it.)
+demos, but that’s about it.) Believe it or not, I actually started out
+implementing this as a command-line tool using
+[Twisted](http://bit.ly/1jh8TAB).
 
 I usually play (very happily) in the back-end systems realm, thinking
 about things like concurrence, bottlenecks, transactional integrity,
@@ -167,7 +199,7 @@ The general conventions I’ve discovered are as follows:
 
 - Most of the operations require some form of authentication, but the
   server behavior is occasionally not [RFC2616]-compliant (see
-  [Authentication Oddities](#Authentication Oddities) below).
+  [Authentication Oddities](#Authentication Oddities)).
 
 - Details about past/pending games are gleaned by an authenticated `GET`
   to the `prisoners` URI. New games are started by an authenticated `POST`
@@ -176,8 +208,7 @@ The general conventions I’ve discovered are as follows:
 The rest becomes pretty obvious after some poking around with the above
 operations.
 
-Server Issues
-`````````````
+### Server Issues
 
 There are a few issues I’ve observed in the server reference
 implementation:
@@ -192,8 +223,8 @@ implementation:
   `null`. While the order of the games listed in the `items` list does
   change slightly, and on occasion, it is not clear to me how the games
   are sorted (it does not appear to depend on `uri`, `id`, `state`, or
-  `imprisoned_at`). Unfortunately, there doesn’t appear to be a reliable
-  way to gain access to more than 10 games.
+  `imprisoned_at`). Unfortunately, I have not yet found a workaround that
+  provides reliable access to more than an arbitrary set of 10 games.
 
 - I’m not sure what performing a `GET` on the `guesses` URI is for. It
   returns `hits` and `misses` for the given ID, but that’s it. It would
@@ -207,8 +238,8 @@ implementation:
 
 - The server appears to allow nonsensical guesses (i.e., things that would
   *never* appear in an answer, like `"*"` or `"\u0000"`). Assuming the words
-  come from `/usr/share/dict/words`, there’s a *very* good chance that only
-  letters are used::
+  come from something like `/usr/share/dict/words`, there’s a *very* good
+  chance that only letters are used::
 
   > % python -c 'with open("/usr/share/dict/words") as f: print repr("".join(sorted(set(f.read().lower()))))'
   > '\nabcdefghijklmnopqrstuvwxyz'
@@ -258,8 +289,7 @@ implementation:
 
 [RFC2616]: http://bit.ly/1kr0n0B
 
-Authentication Oddities
-```````````````````````
+### Authentication Oddities
 
 The server reference implementation exhibits some behavioral oddities that
 don’t play well with [standard methods for dealing with HTTP
@@ -344,20 +374,17 @@ hard-code what responses are semantically equivalent to a 401.
 Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
 ------------------------------------------------------------------------
 
-- *Why on earth would you write your client using Twisted and Urwid?!*
+- *Why on earth would you try to write your client using Twisted?!*
 
   The server provides responses in JSON. The obvious approach is to throw
-  together a static HTML/JavaScript implementation that could be served by
-  any modern browser.
+  together a HTML/JavaScript implementation that could be served by any
+  modern browser.
 
-  But that’s *boring*.
+  But I thought that was too *obvious*.
 
   While I have been experimenting with asynchronous programming and
   cooperative multitasking in I/O-heavy environments, I had precious
-  little exposure to Twisted. I also knew very little about ncurses
-  programming. (I still know very little as Urwid hides much of the
-  details. However, Urwid plays somewhat nicely<a href="#3"
-  name="3ref"><sup>3</sup></a> with Twisted, so I really can’t complain.)
+  little exposure to Twisted.
 
   In other words, I needed motivation to learn Twisted, and this seemed to
   fit the bill, since both call/response over a network and UI-interaction
@@ -370,37 +397,37 @@ Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
   part isn’t actually that difficult. If you’re not familiar with the
   concept, imagine writing software that is entirely
   interrupt-based. (Think signal handlers, if you like. People with
-  experience with `Qt`_ know what I’m talking about.) Programmers have
-  been comfortable with variations of that concept for decades. The
-  Twisted `reactor` is just another variant. (Dave Peticolas’s
-  “`Introduction to Asynchronous Programming and Twisted`_” is an aptly
-  named starting point for the unindoctrinated.)
+  experience with [Qt](http://bit.ly/1lxcuHj) know what I’m talking
+  about.) Programmers have been comfortable with variations of that
+  concept for decades. The Twisted `reactor` is just another
+  variant. (Dave Peticolas’s “[Introduction to Asynchronous Programming
+  and Twisted](http://bit.ly/1dPRdpl)” is an aptly named starting point
+  for the unindoctrinated.)
 
-  The difficulty comes in that beyond the `reactor`, the purported
-  “value add” of Twisted over other cooperative multitasking environments
-  like `gevent`_ or `asyncore`_ (or even `PyZMQ`_, sort of) is its
-  extensive library of protocol implementations. Unfortunately, that
-  library is in constant development and is not well documented beyond
-  some very simple use cases. There is not much guidance on best
-  practices. Those are left to be discovered again and again by each new
-  developer through reading source code and experimentation. In other
-  words, it’s not very efficient, and can be immensely frustrating.
+  The difficulty comes in that beyond the `reactor`, the purported “value
+  add” of Twisted over other cooperative multitasking environments like
+  [gevent](http://bit.ly/19YFPZq) or [asyncore](http://bit.ly/18W7YBP) (or
+  even [PyZMQ](http://bit.ly/1kYyOfy), sort of) is its extensive library
+  of protocol implementations. Unfortunately, that library is in constant
+  development and is not well documented beyond some very simple use
+  cases. There is not much guidance on best practices. Those are left to
+  be discovered again and again by each new developer through reading
+  source code and experimentation. In other words, it’s not very
+  efficient, and can be immensely frustrating.
 
-  Additionally, Twisted associates itself strongly with `TDD`_, but
-  writing tests for asynchronous frameworks is not trivial. Some
-  `rudimentary guidance`_ is provided, but if you want to test *only* the
-  client side of a REST-based application while extending Twisted’s own
-  protocol implementations (which is one way that you *should* use
-  Twisted), you’re on your own, back to looking at source code, and trying
-  to guess at which of the dozens of approaches is best for your
-  situation. Again, it’s not very efficient.
+  Additionally, Twisted associates itself strongly with
+  [TDD](http://bit.ly/19EoVff), but writing tests for asynchronous
+  frameworks is not trivial. Some [rudimentary
+  guidance](http://bit.ly/KiYtBb) is provided, but if you want to test
+  *only* the client side of a REST-based application while extending
+  Twisted’s own protocol implementations (which is one way that you
+  *should* use Twisted), you’re on your own, back to looking at source
+  code, and trying to guess at which of the dozens of approaches is best
+  for your situation. Again, it’s not very efficient.
 
-  Which is why I copped out and used treq and Urwid, instead of
-  implementing the entire thing using just Twisted. Maybe someday I’ll go
-  back and try it (and maybe even make the look and feel more like
-  `(al)pine or pico`_, just for ol’ times’ sake).
-
-  Don’t get me wrong, Twisted is *cool*. And on `PyPy`_, it is *blazingly*
+  Which is why I copped out and used treq, instead of implementing the
+  entire thing using just Twisted. Don’t get me wrong, Twisted is
+  *cool*. And on [PyPy](http://bit.ly/1etG0Qk), it is *blazingly*
   fast. But it is almost as difficult to grok Twisted from a client
   developer’s perspective, as it is to become a regular contributor
   tinkering around with its internals. I think that puts the barrier to
@@ -409,14 +436,18 @@ Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
 
   That’s just my [$1.05](http://bit.ly/1fqjCDn).
 
-.. _`Qt`: http://bit.ly/1lxcuHj
-.. _`Introduction to Asynchronous Programming and Twisted`: http://bit.ly/1dPRdpl
-.. _`gevent`: http://bit.ly/19YFPZq
-.. _`asyncore`: http://bit.ly/18W7YBP
-.. _`PyZMQ`: http://bit.ly/1kYyOfy
-.. _`TDD`: http://bit.ly/19EoVff
-.. _`rudimentary guidance`: http://bit.ly/KiYtBb
-.. _`(al)pine or pico`: http://bit.ly/1aeO0xt
+- *Okay, so where is it? All I see is an “obvious” HTML/JavaScript
+  implementation!*
+
+  My Twisted implementation is sadly, currently rotting on my hard
+  drive. While I was able to get a lot of the server interaction
+  functionality done, honestly, I got bored. It just didn’t demo well. It
+  wasn’t *sexy* enough to anyone but me.
+
+  So I caved, shelved Twisted and decided to learn jQuery. Maybe someday
+  I’ll clean up the Twisted version and check it in as a sub-directory to
+  this project. As you can see from my hint.cgi mode implementation, I
+  just can’t get away from Python.
 
 Copyright
 ---------
@@ -443,10 +474,3 @@ would result, and how they would affect innocent parties. So, I will
 politely abstain. I hope that isn’t counted against me.
 
 <a href="#2ref" name="2"><sup>2</sup></a> Not to be confused with [another type of 401 vs. 403 analysis](http://cnnmon.ie/19BldpY).
-
-
-<a href="#3ref" name="3"><sup>3</sup></a> Urwid actually does a form of
-busy waiting with the Twisted reactor (see [Ian Ward’s
-comment](http://bit.ly/1kkLYWl) in
-``urwid.main_loop.TwistedEventLoop._enable_twisted_idle()``). This is
-obviously less than ideal.

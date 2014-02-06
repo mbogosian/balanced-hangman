@@ -30,7 +30,7 @@
                 <h1>&ldquo;BaHaMan!&rdquo;</h1>
 
                 <h2>
-                    by <a href="http://linkd.in/1fCvWT6" target="_blank">Matt Bogosian</a><br />
+                    by <a href="http://linkd.in/1fCvWT6" target="_blank">Matt Bogosian</a><br>
                     <span class="small">(You know, that guy you should <em>definitely</em> hire. <a id="seriously_show" class="egg_a" href="#" target="_blank">Seriously</a>.)</span>
                 </h2>
 
@@ -41,7 +41,7 @@
 
                 <div id="guesses">
                     <div>
-                        <button id="guess_a" class="hint">A</button>
+                        <button id="guess_a" class="best_hint">A</button>
                         <button id="guess_b" class="hit" disabled>B</button>
                         <button id="guess_c" disabled>C</button>
                         <button id="guess_d" disabled>D</button>
@@ -74,10 +74,12 @@
                 </div>
             </div>
 
-            <div id="cheat_anim">
-                <div><span></span><span>&#x2191; &#x2191; &#x2193; &#x2193; &#x2190; &#x2192; &#x2190; &#x2192; B A &lt;start&gt;</span></div>
-
-                <div>Cheat mode activated!</div>
+            <div id="cheat">
+                <p id="cheat_code"><span></span><span>&#x2191; &#x2191; &#x2193; &#x2193; &#x2190; &#x2192; &#x2190; &#x2192; B A &lt;start&gt;</span></p>
+                <audio id="cheat_step" src="_/media/smb_coin.wav" preload="auto"></audio>
+                <audio id="cheat_ambient" src="_/media/02-underworld.mp3" preload="auto" loop></audio>
+                <audio id="cheat_go" src="_/media/smb_powerup.wav" preload="auto"></audio>
+                <textarea id="hints">Hint mode activated!</textarea>
             </div>
 
             <div id="prisoners">
@@ -86,7 +88,7 @@
 
                 <ul id="prisoners_list">
                     <li id="prisoners_list_item" style="display: none;"><div></div></li>
-                    <li class="loading"><img src="_/media/spinner.gif" /><span class="full_height"> </span>Working...</li>
+                    <li class="loading"><img src="_/media/spinner.gif"></img><span class="full_height"> </span>Working...</li>
                 </ul>
 
                 <button id="prisoners_next" disabled>&rsaquo;</button>
@@ -98,7 +100,7 @@
             <div class="controls_right">
                 <button id="help_show">Help</button>
                 <button id="login_show" disabled>Account</button>
-                <button id="new_game" disabled>New game</button>
+                <button id="new_prisoner" disabled>New game</button>
             </div>
         </div>
     </div>
@@ -113,7 +115,7 @@
 
                     <div>
                         <label for="server_uri">Server URI:</label>
-                        <input name="server_uri" type="url" placeholder="https://hangman.example.dom/" required />
+                        <input name="server_uri" type="url" placeholder="https://hangman.example.dom/" required></input>
                     </div>
                 </fieldset>
 
@@ -122,12 +124,12 @@
 
                     <div>
                         <label for="email_address">Username:</label>
-                        <input name="email_address" type="email" placeholder="janedoe@example.dom" required autofocus />
+                        <input name="email_address" type="email" placeholder="janedoe@example.dom" required autofocus></input>
                     </div>
 
                     <div>
                         <label for="password">Password:</label>
-                        <input name="password" type="password" required />
+                        <input name="password" type="password" required></input>
                     </div>
                 </fieldset>
 
@@ -171,7 +173,7 @@
     <iframe id="license" class="modal" src="LICENSE">&lt;<a href="LICENSE">LICENSE</a>&gt;</iframe>
 
     <div id="seriously" class="modal">
-        <img src="http://bit.ly/1ihAxKp" />
+        <img src="http://bit.ly/1ihAxKp"></img>
     </div>
 
     <div id="egg" class="modal">
@@ -194,8 +196,8 @@
     <script type="text/javascript" src="_/bahaman.js"></script>
     <script>
         $(document).ready(function ($) {
-            Bahaman._.client.email_address = 'mtb19@columbia.edu';
-            Bahaman._.client.password = 'foobar';
+            // Bahaman._.client.email_address = 'mtb19@columbia.edu';
+            // Bahaman._.client.password = 'foobar';
         });
     </script>
 </body>
