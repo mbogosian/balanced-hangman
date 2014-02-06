@@ -1,0 +1,460 @@
+/*=-*-mode: css; encoding: utf-8-*-=======================================
+  Copyright (c) 2014 Matt Bogosian <mtb19@columbia.edu>. All rights
+  reserved.
+\*========================================================================*/
+
+#bg {
+    background-color: #cef;
+    background-image: url('media/bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#content {
+    margin: 1.0em;
+    text-align: center;
+}
+
+#main {
+    bottom: 1.5em;
+    left: 1.5em;
+    position: absolute;
+    right: 1.5em;
+    top: 1.5em;
+    z-index: 1;
+}
+
+#main_bg {
+    background-color: #fff;
+    border: 1px solid #333;
+    bottom: 0;
+    left: 0;
+    opacity: 0.95;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+}
+
+#guesses,
+        #word {
+    line-height: 2.0em;
+    font-size: 125%;
+}
+
+#progress_counter.done {
+    color: #c66;
+}
+
+#progress_counter {
+    color: #66c;
+    display: inline-block;
+    font-size: 400%;
+    opacity: 0;
+    text-shadow: 0px 1px 3px #fff;
+    //background: transparent url('media/requiem_for_a_dream-160x86-0:11-12:104,105:13-106:127.png') 0 -0px no-repeat;
+    //height: 86px;
+    //width: 160px;
+}
+
+#word {
+    font-family: Special Elite, monospace;
+    text-transform: uppercase; 
+}
+
+#word span {
+    display: inline-block;
+    text-decoration: underline;
+    width: 1.0em;
+}
+
+#guesses button {
+    font-family: Courier New, monospace;
+    font-size: inherit;
+    font-weight: bold;
+    width: 2.0em;
+}
+
+#guesses button[disabled].hit {
+    color: #6c6;
+}
+
+#guesses button.hint {
+    color: #33c;
+    text-decoration: underline;
+}
+
+#guesses button[disabled].hint {
+    color: #66c;
+}
+
+#guesses button[disabled].miss {
+    color: #c66;
+}
+
+#cheat_anim {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+#cheat_anim div span:last-of-type,
+        #cheat_anim div:last-of-type {
+    display: none;
+}
+
+#prisoners {
+    background-color: #eee;
+    bottom: 2.0em;
+    height: 6.0em;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+}
+
+#prisoners > a:hover {
+    background-color: #fcc;
+    text-decoration: none;
+}
+
+#prisoners_first,
+        #prisoners_prev,
+        #prisoners_next,
+        #prisoners_last {
+    display: block;
+    font-size: 200%;
+    height: 100%;
+    text-align: center;
+    width: 1.5em;
+}
+
+#prisoners_first,
+        #prisoners_prev {
+    float: left;
+}
+
+#prisoners_next,
+        #prisoners_last {
+    float: right;
+}
+
+#prisoners_list {
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    bottom: 0;
+    left: 6.0em;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+    position: absolute;
+    right: 6.0em;
+    text-align: left;
+    top: 0;
+    white-space: nowrap;
+}
+
+#prisoners_list li {
+    border-right: 1px dashed #999;
+    display: inline-block;
+    font-size: small;
+    font-family: Courier New, monospace;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 10em;
+}
+
+#prisoners_list li:last-of-type {
+    border-right: none;
+}
+
+#prisoners_list li.game_dead,
+        #prisoners_list li.game_rescued {
+    background-position: 95% 95%;
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+}
+
+#prisoners_list li.game_dead {
+    background-image: url('media/dead.png');
+}
+
+#prisoners_list li.game_rescued {
+    background-image: url('media/rescued.png');
+}
+
+#prisoners_list li.loading {
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    z-index: 2;
+}
+
+#prisoners_list li.loading img {
+    height: 5.0em;
+    vertical-align: middle;
+}
+
+#prisoners_list li > div {
+    font-weight: bold;
+    margin: 4px;
+    overflow: hidden;
+    text-shadow: 0px 1px 3px #fff;
+}
+
+#prisoners_list_item {
+    display: none;
+}
+
+#login fieldset.status {
+    border: 1px solid #c33;
+}
+
+#copyright {
+    bottom: 0.5em;
+    color: #fff;
+    font-size: x-small;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-shadow: 0px 1px 1px #000;
+}
+
+#copyright a {
+    color: #ff9;
+    text-decoration: inherit;
+}
+
+#simplemodal-container #help {
+    background-color: #666;
+    background-image: url('media/bg_help.jpg');
+    background-origin: content-box;
+    background-position: 50% 58%;
+    background-repeat: no-repeat;
+    color: #9f9;
+    text-shadow: 0px 0px 3px #000;
+}
+
+#simplemodal-container #help p {
+    margin: 1.0em;
+}
+
+#license {
+    background-color: #fff;
+    border: none;
+}
+
+#seriously,
+        #egg {
+    text-align: center;
+}
+
+#seriously img {
+    width: 100%;
+}
+
+#nojs {
+    background-color: #ffc;
+    border: 1px solid #333;
+    bottom: 10%;
+    display: block;
+    left: 10%;
+    padding: 1em;
+    position: fixed;
+    right: 10%;
+    top: 10%;
+    z-index: 1024;
+}
+
+.controls_content {
+    bottom: 2.0em;
+    left: 0.5em;
+    overflow: auto;
+    position: absolute;
+    right: 0.5em;
+    top: 0.3em;
+}
+
+.controls_left,
+        .controls_right {
+    bottom: 0.3em;
+    position: absolute;
+}
+
+.controls_left button,
+        .controls_right button {
+    width: 8.0em;
+}
+
+.controls_left {
+    left: 0.5em;
+}
+
+.controls_right {
+    right: 0.5em;
+}
+
+a.egg_a,
+        a.egg_a:hover,
+        #copyright a.egg_a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.err,
+        .miss,
+        .modal .status,
+        #login fieldset.status legend {
+    color: #c33;
+}
+
+.full_height {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.game_help {
+}
+
+.game_dead,
+        .game_rescued {
+    background-color: #ccc;
+}
+
+.game_dead {
+    text-decoration: line-through;
+}
+
+.hit,
+        .okay {
+    color: #3c3;
+}
+
+
+.loading {
+    display: none;
+    letter-spacing: 1.0em;
+}
+
+.modal {
+    display: none;
+    height: 360px;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+    width: 600px;
+}
+
+.modal fieldset:first-of-type {
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+.modal fieldset {
+    border: 1px solid #999;
+    margin: 0.5em 0;
+    padding: 1.0em;
+    font-size: 80%;
+}
+
+.modal fieldset legend {
+    color: #999;
+}
+
+.modal label {
+    float: left;
+    font-weight: bold;
+    margin-right: 0.5em;
+    padding-top: 0.2em;
+    text-align: right;
+    width: 25%;
+}
+
+.modal fieldset input {
+    text-align: left;
+    width: 60%;
+}
+
+.pending {
+    color: #cc3;
+}
+
+.small {
+    font-size: small;
+}
+
+a:hover {
+    color: #6cc;
+    text-decoration: underline;
+}
+
+a {
+    color: #69c;
+    text-decoration: none;
+}
+
+body {
+    color: #333;
+    font-family: Ubuntu, sans-serif;
+}
+
+h1,
+        h2 {
+    font-family: Rock Salt, serif;
+    line-height: 100%;
+    text-align: center;
+}
+
+h1 em,
+        h2 em {
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 150%;
+}
+
+h2 {
+    font-size: 100%;
+}
+
+#simplemodal-overlay {
+    background-color: #000;
+}
+
+#simplemodal-container {
+    background-color: #eee;
+    border: 1px solid #333;
+    height: 360px;
+    padding: 12px;
+    width: 600px;
+}
+
+#simplemodal-container .simplemodal-data {
+    padding: 0px;
+}
+
+#simplemodal-container a.modalCloseImg {
+    background: url('3rdparty/simplemodal-demo-basic-1.4.4/img/basic/x.png') no-repeat;
+    cursor: pointer;
+    display: inline;
+    height: 29px;
+    position: absolute;
+    right: -16px;
+    top: -15px;
+    width: 25px;
+    z-index: 4096;
+}
