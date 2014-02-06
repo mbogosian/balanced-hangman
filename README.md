@@ -51,11 +51,11 @@ Known Issues
   problems do exist, but none has been implemented at this point.
 
 - I will reiterate this again later, but I am *not* very experienced in UI
-  design/implementation (see [Notes On The Architecture](#Notes On The
-  Architecture)). As such, I have likely made poor decisions that result
-  in some unpleasant user experiences. Also, this is my first real foray
-  into client-side JavaScript and jQuery. I have likely abused either or
-  both.
+  design/implementation (see [Notes On The
+  Architecture](#Notes On The Architecture)). As such, I have likely made
+  poor decisions that result in some unpleasant user experiences. Also,
+  this is my first real foray into client-side JavaScript and jQuery. I
+  have likely abused either or both.
 
 - There are probably several ways to save on the number of DOM/CSS
   manipulations and server round-trips. This implementation is a prototype
@@ -75,12 +75,13 @@ Known Issues
   enough to add, perhaps through the settings screen. You can currently
   trick the application into changing an account password by taking
   advantage of an apparent server bug (see [Observations About The Server
-  Reference Implementation](#Observations About The Server Reference
-  Implementation)). To do this, attempt to log in using a bad e-mail
-  address or password, which will enable the “Create new” button in the
-  account screen. Then you can change the e-mail address to an existing
-  account, at which point clicking the “Create new” button will change the
-  password for that account.
+  Reference
+  Implementation](#Observations About The Server Reference Implementation)).
+  To do this, attempt to log in using a bad e-mail address or password,
+  which will enable the “Create new” button in the account screen. Then
+  you can change the e-mail address to an existing account, at which point
+  clicking the “Create new” button will change the password for that
+  account.
 
 - No thought has been given to [I18n/L10n](http://bit.ly/1cktcE8). This is
   probably bad. In my experience, this is difficult to retrofit through
@@ -107,8 +108,8 @@ Known Issues
   writing, I have found it is missing “superpigmentation” and “bryce”). In
   these cases, it can actually lead the user astray.
 
-Notes On The Architecture
--------------------------
+<a name="Notes On The Architecture">Notes On The Architecture</a>
+-----------------------------------------------------------------
 
 Let me start by saying this was a learning experience for me. I am *not* a
 UI designer, nor do I have any real experience implementing a full
@@ -130,8 +131,8 @@ down than I (which is pretty much everyone, as near as I can tell).
 
 TODO - describe architecture here
 
-Observations About The Server Reference Implementation
-------------------------------------------------------
+<a name="Observations About The Server Reference Implementation">Observations About The Server Reference Implementation</a>
+---------------------------------------------------------------------------------------------------------------------------
 
 If there’s an API doc published somewhere, I haven’t found it. Maybe
 finding the docs was part of the test, but if that’s the case, I’ve
@@ -289,7 +290,7 @@ implementation:
 
 [RFC2616]: http://bit.ly/1kr0n0B
 
-### Authentication Oddities
+### <a name="Authentication Oddities">Authentication Oddities</a>
 
 The server reference implementation exhibits some behavioral oddities that
 don’t play well with [standard methods for dealing with HTTP
