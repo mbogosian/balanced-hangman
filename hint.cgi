@@ -41,6 +41,7 @@ _STATUS_500 = '500 Internal Server Error'
 _STATUS_501 = '501 Not Implemented'
 
 _WORDS_FILES = (
+    'words',
     '/usr/share/dict/words',
     '/usr/dict/words',
 )
@@ -48,6 +49,47 @@ _WORDS_FILES = (
 _ALPHABET = set(( chr(ord('a') + c) for c in range(26) ))
 
 #---- Functions ----------------------------------------------------------
+
+#=========================================================================
+def filterMatches(a_output):
+    """
+    Generator for splitting an input string by lines and outputting only
+    those lines that are nonempty and unambiguously encodable as unicode.
+
+    >>> list(filterMatches(b' ThE\n    qUiCk   \n\n\n  \n\n BrOwN \nfOx\n  Is \nL\xc3\xa1Zy\n \n \n'))
+    [u'the', u'quick', u'brown', u'fox', u'is']
+    """
+    for match in output.split(os.linesep):
+        # Filter out blank lines
+        if not match:
+            continue
+
+        # Filter out non ascii words
+        try:
+            match = unicode(match)
+        except UnicodeDecodeError:
+            continue
+
+        # Filter out possessives
+        if not match.endswith("'s"):
+            yield match.strip().lower()
+
+#=========================================================================
+def repldots(a_word):
+    """
+    Generator for converting the non-letter characters of a_word to
+    periods.
+
+    >>> ''.join(repldots('a1b2c3d4e'))
+    u'a.b.c.d.e'
+    >>> ''.join(repldots('    a*.*.*z    '))
+    u'....a.....z....'
+    """
+    for c in word:
+        if c in _ALPHABET:
+            yield c
+        else:
+            yield '.'
 
 #=========================================================================
 def _main():
@@ -72,16 +114,9 @@ def _main():
         status = _STATUS_400
         data['message'] = '"word" parameter must have at least one character'
     else:
-        def lettersOrPeriods(a_word):
-            for c in word:
-                if c in _ALPHABET:
-                    yield c
-                else:
-                    yield '.'
-
         word = word.lower()
         misses = misses.lower()
-        pattern = ''.join(lettersOrPeriods(word))
+        pattern = ''.join(repldots(word))
         guesses = ''.join(_ALPHABET.intersection(word + misses))
 
         if guesses:
@@ -95,11 +130,16 @@ def _main():
 
         if egrep_proc.returncode in ( 0, 1 ):
             status = _STATUS_200
-            matches = list(set(( match.lower() for match in output.split(os.linesep) if match )))
+            matches = list(set(filterMatches(output)))
             matches.sort()
             histogram = {}
 
             for match in matches:
+                try:
+                    match = unicode(match)
+                except UnicodeDecodeError:
+                    continue
+
                 for c in set(match):
                     if c not in guesses:
                         histogram[c] = histogram.get(c, 0) + 1

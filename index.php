@@ -91,8 +91,8 @@
                     <li class="loading"><img src="_/media/spinner.gif"></img><span class="full_height"> </span>Working...</li>
                 </ul>
 
-                <button id="prisoners_next" disabled>&rsaquo;</button>
                 <button id="prisoners_last" disabled>&raquo;</button>
+                <button id="prisoners_next" disabled>&rsaquo;</button>
             </div>
 
             <div id="message" class="controls_left pending">Loading page...</div>
@@ -159,15 +159,17 @@
     </div>
 
     <div id="help" class="modal">
-        <p>Your best friend has been arrested and charged with arson, treason, armed robbery, and public drunkeness ... <strong>plus</strong> ... murder, mayhem, ignorance, and ugliness.</p>
+        <div id="help_content">
+            <p>Your best friend has been arrested and charged with arson, treason, armed robbery, and public drunkeness ... <strong>plus</strong> ... murder, mayhem, ignorance, and ugliness.</p>
 
-        <p>However, the judge, being a benevolent sort, will let your friend plea-bargain the charges down to ugliness, provided he/she has one friend. <strong>Guess who?</strong></p>
+            <p>However, the judge, being a benevolent sort, will let your friend plea-bargain the charges down to ugliness, provided he/she has one friend. <strong>Guess who?</strong></p>
 
-        <p>To save your friend&rsquo;s life, you must guess the secret word. Each time you guess a <strong>correct</strong> letter, it will be revealed.</p>
+            <p>To save your friend&rsquo;s life, you must guess the secret word. Each time you guess a <strong>correct</strong> letter, it will be revealed.</p>
 
-        <p>But <strong>beware</strong>! Each time you guess an <strong>incorrect</strong> letter, your friend advances one step closer to <strong>doom</strong>!</p>
+            <p>But <strong>beware</strong>! Each time you guess, your friend advances one step closer to <strong>doom</strong>!</p>
 
-        <div class="small" style="bottom: 1.0em; position: absolute; right: 1.0em;">(<a href="http://bit.ly/1cuD3M8" target="_blank">inspiration</a>)</div>
+            <div class="small" style="bottom: 1.0em; position: absolute; right: 1.0em;">(<a href="http://bit.ly/1cuD3M8" target="_blank">inspiration</a>)</div>
+        </div>
     </div>
 
     <iframe id="license" class="modal" src="LICENSE">&lt;<a href="LICENSE">LICENSE</a>&gt;</iframe>

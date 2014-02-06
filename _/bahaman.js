@@ -1164,12 +1164,12 @@ Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
     //---- Private class methods -----------------------------------------
 
     /*====================================================================*\
-      Helper method to replace asterisks with '&emsp;' for displaying the
+      Helper method to replace asterisks with '&ensp;' for displaying the
       word associated with the active game. */
 Bahaman.Screen._word = function(a_word) {
     var word = $('#word');
     word.text(a_word)
-        .html(word.text().replace(/\*/g, '&emsp;'))
+        .html(word.text().replace(/\*/g, '&ensp;'))
         .lettering();
 }
 

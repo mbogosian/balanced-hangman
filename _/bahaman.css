@@ -141,18 +141,25 @@
     display: block;
     font-size: 200%;
     height: 100%;
+    position: absolute;
     text-align: center;
     width: 1.5em;
 }
 
-#prisoners_first,
-        #prisoners_prev {
-    float: left;
+#prisoners_first {
+    left: 0;
 }
 
-#prisoners_next,
-        #prisoners_last {
-    float: right;
+#prisoners_prev {
+    left: 1.5em;
+}
+
+#prisoners_next {
+    right: 1.5em;
+}
+
+#prisoners_last {
+    right: 0;
 }
 
 #prisoners_list {
@@ -248,17 +255,27 @@
     text-decoration: inherit;
 }
 
-#simplemodal-container #help {
-    background-color: #666;
+#help {
     background-image: url('media/bg_help.jpg');
     background-origin: content-box;
     background-position: 50% 58%;
     background-repeat: no-repeat;
-    color: #9f9;
-    text-shadow: 0px 0px 3px #000;
 }
 
-#simplemodal-container #help p {
+#help_content {
+    position: absolute;
+    background-color: #000;
+    bottom: 0;
+    color: #3f3;
+    font-size: large;
+    left: 0;
+    opacity: 0.8;
+    right: 0;
+    text-shadow: 0px 0px 7px #3f3;
+    top: 0;
+}
+
+#help p {
     margin: 1.0em;
 }
 
