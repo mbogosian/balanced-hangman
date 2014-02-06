@@ -25,6 +25,7 @@ Clone the repository and open `index.php`:
     # On server (e.g., Apache with PHP)
     $ cd ~/public_html # For example
     $ git clone https://github.com/mbogosian/balanced-hangman
+    $ chmod -R a+Xr balanced-hangman ; chmod -R o-rstwx balanced-hangman/.git
     ...
 
     # On client
@@ -34,6 +35,7 @@ Or on OS X:
 
     $ cd ~/Sites # For example
     $ git clone https://github.com/mbogosian/balanced-hangman
+    $ chmod -R a+Xr balanced-hangman ; chmod -R o-rstwx balanced-hangman/.git
     $ open http://localhost/~[username]/balanced-hangman/index.php
 
 Known Issues
@@ -470,7 +472,7 @@ Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
 Copyright
 ---------
 
-Copyright (c) 2014 Matt Bogosian &lt;mtb19@columbia.edu%gt;.
+Copyright (c) 2014 Matt Bogosian &lt;mtb19@columbia.edu&gt;.
 
 Please see the LICENSE (or LICENSE.txt) file which accompanied this
 software for rights and restrictions governing its use. If such a file

@@ -41,7 +41,7 @@ _STATUS_500 = '500 Internal Server Error'
 _STATUS_501 = '501 Not Implemented'
 
 _WORDS_FILES = (
-    'words',
+    '_/words',
     '/usr/share/dict/words',
     '/usr/dict/words',
 )
@@ -59,7 +59,7 @@ def filterMatches(a_output):
     >>> list(filterMatches(b' ThE\n    qUiCk   \n\n\n  \n\n BrOwN \nfOx\n  Is \nL\xc3\xa1Zy\n \n \n'))
     [u'the', u'quick', u'brown', u'fox', u'is']
     """
-    for match in output.split(os.linesep):
+    for match in a_output.split(os.linesep):
         # Filter out blank lines
         if not match:
             continue
@@ -85,7 +85,7 @@ def repldots(a_word):
     >>> ''.join(repldots('    a*.*.*z    '))
     u'....a.....z....'
     """
-    for c in word:
+    for c in a_word:
         if c in _ALPHABET:
             yield c
         else:
@@ -151,6 +151,7 @@ def _main():
 
             data['candidates'] = ' '.join(matches)
             data['frequencies'] = dict(( ( k, v / max_freq ) for k, v in histogram.iteritems() ))
+            data['words_path'] = words_file
         else:
             status = _STATUS_500
             data['message'] = os.linesep.join(( ' '.join(cmd), output ))
