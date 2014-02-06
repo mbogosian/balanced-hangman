@@ -20,7 +20,7 @@ Jones’s and his [GitHub Gist page](http://bit.ly/1kqF5R0).
 Installation
 ------------
 
-Fork and open `index.html`:
+Clone and open `index.php`:
 
     # On server
     $ git clone https://github.com/mbogosian/balanced-hangman
@@ -72,10 +72,11 @@ Known Issues
 
 - The UI does not expose functionality to change one’s account password,
   even though such functionality exists on the server. This should be easy
-  enough to add, perhaps through the settings screen. You can currently
-  trick the application into changing an account password by taking
-  advantage of an apparent server bug (see [Observations About The Server
-  Reference
+  enough to add, perhaps through the account screen.
+
+  You can currently trick the application into changing an account
+  password by taking advantage of an apparent server bug (see
+  [Observations About The Server Reference
   Implementation](#Observations About The Server Reference Implementation)).
   To do this, attempt to log in using a bad e-mail address or password,
   which will enable the “Create new” button in the account screen. Then
@@ -96,7 +97,13 @@ Known Issues
 - SSL is not enforced. A smarter implementation would test SSL/TLS
   availability when following the discovery URI, enforce it where
   available, and provide a warning where it was not. Instead, it just
-  blindly follows whatever protocol is designed.
+  blindly follows whatever protocol is designed. Note that with this
+  implementation, there are actually *three* hops that should be encrypted
+  (see [Server Issues](#Server Issues)):
+
+  1. client to `index.php`
+  1. client to proxy
+  1. proxy to hangman server
 
 - While it should theoretically work, this has *not* been tested on
   Internet Explorer in any way, shape, or form. If this were anything more
@@ -108,7 +115,10 @@ Known Issues
   writing, I have found it is missing “superpigmentation” and “bryce”). In
   these cases, it can actually lead the user astray.
 
-<a name="Notes On The Architecture">Notes On The Architecture</a>
+- Enabling hints mode using Firefox on OS X may result in audio
+  anomalies. I’m pretty sure this is a bug in Firefox.
+
+<a name="Notes On The Architecture"></a>Notes On The Architecture
 -----------------------------------------------------------------
 
 Let me start by saying this was a learning experience for me. I am *not* a
@@ -129,9 +139,16 @@ which appear more [pasta-like](http://bit.ly/1ktB6p2) than expected). I
 appreciate guidance and feedback from people who have traveled further
 down than I (which is pretty much everyone, as near as I can tell).
 
-TODO - describe architecture here
+Basically, `index.php` (and the DOM) serves as the view. The
+`Bahaman.Screen` class kind of serves the role of the controller. The
+`Bahaman.Client` class serves as an abstraction to both parts of the
+application logic, namely the hangman server (through a hosted proxy; see
+[Server Issues](#Server Issues)) as well as my homegrown script to enable
+**hints mode**&trade;.
 
-<a name="Observations About The Server Reference Implementation">Observations About The Server Reference Implementation</a>
+That’s about it.
+
+<a name="Observations About The Server Reference Implementation"></a>Observations About The Server Reference Implementation
 ---------------------------------------------------------------------------------------------------------------------------
 
 If there’s an API doc published somewhere, I haven’t found it. Maybe
@@ -185,10 +202,10 @@ The general conventions I’ve discovered are as follows:
   similar to account creation, but for an existing account. Credentials
   *can* be provided. However, if credentials are *not* provided, **this
   will blindly overwrite whatever password exists for that account**! This
-  means that as long as one has an account’s e-mail address, one can
-  hijack it by overwriting the password, and then using the account as
-  one’s own (at least until the owner of the account figures it out and
-  does the same thing to hijack it back).
+  means that as long as you know the account’s e-mail address, you can
+  hijack it by overwriting the password, and then you can use it as your
+  own (at least until the owner of the account figures it out and does the
+  same thing to hijack it back).
 
 - I have not discovered a way to delete an account once it is created.
 
@@ -209,7 +226,7 @@ The general conventions I’ve discovered are as follows:
 The rest becomes pretty obvious after some poking around with the above
 operations.
 
-### Server Issues
+### <a name="Server Issues"></a>Server Issues
 
 There are a few issues I’ve observed in the server reference
 implementation:
@@ -242,8 +259,10 @@ implementation:
   come from something like `/usr/share/dict/words`, there’s a *very* good
   chance that only letters are used::
 
-  > % python -c 'with open("/usr/share/dict/words") as f: print repr("".join(sorted(set(f.read().lower()))))'
-  > '\nabcdefghijklmnopqrstuvwxyz'
+    ```
+    % python -c 'with open("/usr/share/dict/words") as f: print repr("".join(sorted(set(f.read().lower()))))'
+    '\nabcdefghijklmnopqrstuvwxyz'
+    ```
 
   I’ve decided to limit guesses to ascii letters below `0x7f` (i.e., no
   “extended” ascii characters, like “ç” or “ö”) on the client side. This
@@ -290,7 +309,7 @@ implementation:
 
 [RFC2616]: http://bit.ly/1kr0n0B
 
-### <a name="Authentication Oddities">Authentication Oddities</a>
+### <a name="Authentication Oddities"></a>Authentication Oddities
 
 The server reference implementation exhibits some behavioral oddities that
 don’t play well with [standard methods for dealing with HTTP
@@ -448,7 +467,7 @@ Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
   So I caved, shelved Twisted and decided to learn jQuery. Maybe someday
   I’ll clean up the Twisted version and check it in as a sub-directory to
   this project. As you can see from my hint.cgi mode implementation, I
-  just can’t get away from Python.
+  just can’t seem to get away from Python.
 
 Copyright
 ---------
@@ -474,4 +493,5 @@ execution context is. I certainly can’t predict what negative side effects
 would result, and how they would affect innocent parties. So, I will
 politely abstain. I hope that isn’t counted against me.
 
-<a href="#2ref" name="2"><sup>2</sup></a> Not to be confused with [another type of 401 vs. 403 analysis](http://cnnmon.ie/19BldpY).
+<a href="#2ref" name="2"><sup>2</sup></a> Not to be confused with [another
+type of 401 vs. 403 analysis](http://cnnmon.ie/19BldpY).
