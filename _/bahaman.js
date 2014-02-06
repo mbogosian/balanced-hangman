@@ -710,10 +710,6 @@ Bahaman.Screen.prototype.loginGo = function(a_event) {
     this._prisonersLoading();
     var new_account = (a_event.target === $('#login_create')[0]);
 
-    console.log(JSON.stringify(Bahaman._.client));
-    console.log(a_event.target);
-    console.log(new_account);
-
     if (new_account) {
         this._messagePending('Creating account...');
         Bahaman._.client.newAccount();
@@ -723,9 +719,7 @@ Bahaman.Screen.prototype.loginGo = function(a_event) {
         var server_uri = $("#login input[name='server_uri'][type='url']").val();
 
         if (Bahaman._.client.server_uri !== server_uri) {
-            console.log('server_uri was: ' + Bahaman._.client.server_uri);
             Bahaman._.client.server_uri = 'https://balanced-hangman.herokuapp.com/';
-            console.log('Set server_uri to: ' + Bahaman._.client._server_uri);
         }
 
         Bahaman._.client.email_address = email_address;
@@ -1192,8 +1186,6 @@ $(document).ready(function ($) {
 });
 
 $(window).on('load', function() {
-    console.log('server_uri was: ' + Bahaman._.client.server_uri);
     Bahaman._.client.server_uri = 'https://balanced-hangman.herokuapp.com/';
-    console.log('Set server_uri to: ' + Bahaman._.client._server_uri);
     Bahaman._.client.testLogin();
 });
