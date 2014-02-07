@@ -365,8 +365,7 @@ Bahaman.Client.prototype._jsonRequestFail = function(a_sig_error, a_on_error, a_
                     || a_status >= 300)
                 && 'contents' in data
                 && 'description' in data.contents
-                && data.contents.description.toLowerCase().startsWith('user ')
-                && data.contents.description.toLowerCase().startsWith(' not found'))
+                && data.contents.description.toLowerCase().match(/^user .* not found$/))
             || (data
                 && 'contents' in data
                 && data.contents === null)) {
@@ -724,29 +723,29 @@ Bahaman.Screen.prototype.loginGo = function(a_event) {
     $('#new_prisoner').prop('disabled', true);
     this._prisonersLoading();
     var new_account = (a_event.target === $('#login_create')[0]);
+    var server_uri = $("#login input[name='server_uri'][type='url']").val();
+    var email_address = $("#login input[name='email_address'][type='email']").val();
+    var password = $("#login input[name='password'][type='password']").val();
+
+    if (Bahaman._.client.server_uri !== server_uri) {
+        Bahaman._.client.server_uri = 'https://balanced-hangman.herokuapp.com/';
+    }
+
+    var theme_css = $("#login input[name='theme_css'][type='text']").val();
+    var theme_link = $("head link[rel='stylesheet'][type='text/css']");
+
+    if (theme_css
+            && theme_css !== theme_link.attr('href')) {
+        theme_link.attr('href', theme_css);
+    }
+
+    Bahaman._.client.email_address = email_address;
+    Bahaman._.client.password = password;
 
     if (new_account) {
         this._messagePending('Creating account...');
         Bahaman._.client.newAccount();
     } else {
-        var server_uri = $("#login input[name='server_uri'][type='url']").val();
-        var email_address = $("#login input[name='email_address'][type='email']").val();
-        var password = $("#login input[name='password'][type='password']").val();
-
-        if (Bahaman._.client.server_uri !== server_uri) {
-            Bahaman._.client.server_uri = 'https://balanced-hangman.herokuapp.com/';
-        }
-
-        var theme_css = $("#login input[name='theme_css'][type='text']").val();
-        var theme_link = $("head link[rel='stylesheet'][type='text/css']");
-
-        if (theme_css
-                && theme_css !== theme_link.attr('href')) {
-            theme_link.attr('href', theme_css);
-        }
-
-        Bahaman._.client.email_address = email_address;
-        Bahaman._.client.password = password;
         this._messagePending('Logging in...');
         Bahaman._.client.testLogin();
     }
