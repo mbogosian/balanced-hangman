@@ -95,6 +95,7 @@
 
                 <button id="prisoners_last" disabled>&raquo;</button>
                 <button id="prisoners_next" disabled>&rsaquo;</button>
+                <button id="prisoners_refresh" disabled>&#x27f3;</button>
             </div>
 
             <div id="message" class="controls_left pending">Loading page...</div>

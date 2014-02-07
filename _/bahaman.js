@@ -796,12 +796,14 @@ Bahaman.Screen.prototype.prisonersGo = function(a_event /* = null */) {
 
     var uri = null;
 
+    this._prisonersLoading();
+
     if (event !== null
             && 'target' in event) {
         uri = $(event.target).prop('_prisoners_nav_uri');
+        $('#prisoners_refresh').prop('_prisoners_nav_uri', uri)
     }
 
-    this._prisonersLoading();
     this._messagePending('Retrieving games...');
     Bahaman._.client.prisoners(uri);
 
@@ -1012,6 +1014,9 @@ Bahaman.Screen.prototype._prisonersLoading = function() {
     $('#prisoners_last').prop('disabled', true)
         .removeProp('_prisoners_nav_uri')
         .unbind('click');
+    $('#prisoners_refresh').prop('disabled', true)
+        .removeProp('_prisoners_nav_uri')
+        .unbind('click');
 
     var prisoners_list_items = $('#prisoners_list li');
 
@@ -1062,6 +1067,9 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
             });
     }
 
+    $('#prisoners_refresh').click(this.prisonersGo.bind(this))
+        .prop('disabled', false);
+
     var list = $('#prisoners_list');
     var list_item_tmpl = $('#prisoners_list_item');
     var games = [];
@@ -1075,12 +1083,6 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
 
     for (var game in games) {
         game = games[game];
-
-        // Skip the active game, if it appears in the list
-        if (active_game
-            && game.state.id === active_game.state.id) {
-            continue;
-        }
 
         var list_item = list_item_tmpl.clone();
         list_item.removeAttr('id')

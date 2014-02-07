@@ -146,7 +146,8 @@
 #prisoners_first,
         #prisoners_prev,
         #prisoners_next,
-        #prisoners_last {
+        #prisoners_last,
+        #prisoners_refresh {
     display: block;
     font-size: 200%;
     height: 100%;
@@ -164,10 +165,14 @@
 }
 
 #prisoners_next {
-    right: 1.5em;
+    right: 3.0em;
 }
 
 #prisoners_last {
+    right: 1.5em;
+}
+
+#prisoners_refresh {
     right: 0;
 }
 
@@ -180,7 +185,7 @@
     overflow: auto;
     padding: 0;
     position: absolute;
-    right: 6.0em;
+    right: 9.0em;
     text-align: left;
     top: 0;
     white-space: nowrap;
