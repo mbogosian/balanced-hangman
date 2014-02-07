@@ -351,7 +351,6 @@
 }
 
 a.egg_a,
-        a.egg_a:hover,
         #copyright a.egg_a {
     color: inherit;
     text-decoration: inherit;
@@ -459,6 +458,11 @@ h1 {
     color: #fc3;
     font-size: 150%;
     text-shadow: 0px 3px 5px #666;
+}
+
+h1 a {
+    color: inherit;
+    text-decoration: inherit;
 }
 
 h2 {

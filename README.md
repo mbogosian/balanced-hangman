@@ -110,15 +110,15 @@ Known bugs are [tracked on GitHub](./issues).
   at which point clicking the &ldquo;Create new&rdquo; button will change
   the password for that account.
 
-- No thought has been given to [I18n/L10n](http://bit.ly/1cktcE8). This is
-  probably bad. In my experience, this is difficult to retrofit through
-  refactoring (it is one of those rare cases in software development where
-  it often saves to do the work up front and is not generally considered
-  [premature optimization](http://bit.ly/18Wh3uj) where a UI is
-  involved). However, given that this is a quick prototype, I pray to the
-  almighty gods of hacking for forgiveness. Rest assured that I have made
-  the appropriate backyard sacrifices in compliance with all governing ISO
-  standards.
+- No thought has been given to [I18n/L10n](http://bit.ly/1cktcE8). This
+  includes not having a specialized mobile device UI. This is probably
+  bad. In my experience, this is difficult to retrofit through refactoring
+  (it is one of those rare cases in software development where it often
+  saves to do the work up front and is not generally considered [premature
+  optimization](http://bit.ly/18Wh3uj) where a UI is involved). However,
+  given that this is a quick prototype, I pray to the almighty gods of
+  hacking for forgiveness. Rest assured that I have made the appropriate
+  backyard sacrifices in compliance with all governing ISO standards.
 
 - While it should theoretically work, this has *not* been tested on
   Internet Explorer in any way, shape, or form. If this were anything more

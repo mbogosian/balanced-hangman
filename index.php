@@ -29,7 +29,7 @@
             <div id="main_bg"></div>
 
             <div id="content">
-                <h1>&ldquo;BaHaMan!&rdquo;</h1>
+                <h1>&ldquo;<a href="https://github.com/mbogosian/balanced-hangman" target="_blank">BaHaMan!</a>&rdquo;</h1>
 
                 <h2>
                     by <a href="http://linkd.in/1fBEffR" target="_blank">Matt Bogosian</a><br>
