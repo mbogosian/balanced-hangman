@@ -1258,14 +1258,14 @@ Bahaman.Screen.prototype._updateProgressCounter = function(a_game) {
         }
     }
 
+    var hints = $('#hints');
+
+    if (hints.css('display') !== 'none') {
+        hints.text('Retrieving hints...');
+        Bahaman._.client.hint(a_game.state.word, misses);
+    }
+
     if (a_game.state.state === 'help') {
-        var hints = $('#hints');
-
-        if (hints.css('display') !== 'none') {
-            hints.text('Retrieving hints...');
-            Bahaman._.client.hint(a_game.state.word, misses);
-        }
-
         this._spriteAnimStop();
     } else {
         this._spriteAnimRun(a_game, true);
