@@ -12,10 +12,14 @@ BaHaMan - BAlanced HAngMAN
 
 After falling *months* behind, I was recently getting caught up on my
 ChangeLog podcasts when I heard [an interesting
-challenge](http://bit.ly/1bWmcNO) alluded to by guest, Marshall
+challenge](http://bit.ly/1bWmcNO) alluded to by then guest Marshall
 Jones. This is an attempt to address that challenge (also posed via
 [Jareau Wade’s blog post](http://bit.ly/1cWX1Pu) as well as Marshall
 Jones’s and his [GitHub Gist page](http://bit.ly/1kqF5R0).
+
+You can [try out out for yourself](http://bit.ly/1iw9P17). (I highly
+recommend using a recent version of [Firefox](http://mzl.la/1gRGot0) or
+[Chrome](http://bit.ly/LVhB9B).)
 
 Installation
 ------------
@@ -43,7 +47,7 @@ Known Issues
 
 - I will reiterate this again later, but I am *not* very experienced in UI
   design/implementation (see [Notes On The
-  Architecture](#Notes On The Architecture)). As such, I have likely made
+  Architecture](#notes-on-the-architecture)). As such, I have likely made
   poor decisions that result in some unpleasant user experiences. Also,
   this is my first real foray into client-side JavaScript and jQuery. I
   have likely abused either or both.
@@ -75,12 +79,12 @@ Known Issues
   manipulations and server round-trips. This implementation is a prototype
   (i.e., it attempts to get things functionally acceptable). Not much
   effort has been made to tune performance. **Hints Mode**&trade;, for
-  example, is really labor intensive on the server side. It would probably
-  benefit from some kind of short-term caching mechanism.
+  example, is really labor intensive on the server side for words with no
+  guesses. It may benefit from some kind of short-term caching mechanism.
 
 - The authentication model in the server reference implementation doesn’t
   jive with the retry logic in many libraries’ authentication handlers
-  (see [Authentication Oddities](#Authentication Oddities)). But this
+  (see [Authentication Oddities](#authentication-oddities)). But this
   implementation’s the rather silly blind submission of a hand-created
   Authorization header with certain requests seems to work.
 
@@ -102,7 +106,7 @@ Known Issues
   You can currently trick the application into changing an account
   password by taking advantage of an apparent server bug (see
   [Observations About The Server Reference
-  Implementation](#Observations About The Server Reference Implementation)).
+  Implementation](#observations-about-the-server-reference-implementation)).
   To do this, attempt to log in using a bad e-mail address or password,
   which will enable the “Create new” button in the account screen. Then
   you can change the e-mail address to an existing account, at which point
@@ -124,7 +128,7 @@ Known Issues
   available, and provide a warning where it was not. Instead, it just
   blindly follows whatever protocol is designed. Note that with this
   implementation, there are actually *three* hops that should be encrypted
-  (see [Server Issues](#Server Issues)):
+  (see [Server Issues](#server-issues)):
 
   1. client to `index.php`
   1. client to proxy
@@ -143,8 +147,8 @@ Known Issues
 - Enabling **Hints Mode**&trade; using Firefox on OS X may result in audio
   anomalies. I’m pretty sure this is a bug in Firefox.
 
-<a name="Notes On The Architecture"></a>Notes On The Architecture
------------------------------------------------------------------
+Notes On The Architecture
+-------------------------
 
 Let me start by saying this was a learning experience for me. I am *not* a
 UI designer, nor do I have any real experience implementing a full
@@ -168,13 +172,13 @@ Basically, `index.php` (and the DOM) serves as the view. The
 `Bahaman.Screen` class kind of serves the role of the controller. The
 `Bahaman.Client` class serves as an abstraction to both parts of the
 application logic, namely the hangman server (through a hosted proxy; see
-[Server Issues](#Server Issues)) as well as my homegrown script to support
+[Server Issues](#server-issues)) as well as my homegrown script to support
 **Hints Mode**&trade;.
 
 That’s about it.
 
-<a name="Observations About The Server Reference Implementation"></a>Observations About The Server Reference Implementation
----------------------------------------------------------------------------------------------------------------------------
+Observations About The Server Reference Implementation
+------------------------------------------------------
 
 If there’s an API doc published somewhere, I haven’t found it. Maybe
 finding the docs was part of the test, but if that’s the case, I’ve
@@ -242,7 +246,7 @@ The general conventions I’ve discovered are as follows:
 
 - Most of the operations require some form of authentication, but the
   server behavior is occasionally not [RFC2616]-compliant (see
-  [Authentication Oddities](#Authentication Oddities)).
+  [Authentication Oddities](#authentication-oddities)).
 
 - Details about past/pending games are gleaned by an authenticated `GET`
   to the `prisoners` URI. New games are started by an authenticated `POST`
@@ -251,7 +255,7 @@ The general conventions I’ve discovered are as follows:
 The rest becomes pretty obvious after some poking around with the above
 operations.
 
-### <a name="Server Issues"></a>Server Issues
+### Server Issues
 
 There are a few issues I’ve observed in the server reference
 implementation:
@@ -334,7 +338,7 @@ implementation:
 
 [RFC2616]: http://bit.ly/1kr0n0B
 
-### <a name="Authentication Oddities"></a>Authentication Oddities
+### Authentication Oddities
 
 The server reference implementation exhibits some behavioral oddities that
 don’t play well with [standard methods for dealing with HTTP

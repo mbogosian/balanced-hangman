@@ -164,35 +164,6 @@ Bahaman.Client.prototype.__defineSetter__('server_uri', function(a_val) {
     this._prisoners_uri = null;
 });
 
-//     /*====================================================================*\
-//       The internal state of this object (useful for restoring a prior
-//       state by reassignment). */
-// Bahaman.Client.prototype.__defineGetter__('state', function() {
-//     return {
-//         tested: this._tested,
-//         email_address: this._email_address,
-//         password: this._password,
-//         server_uri: this._server_uri,
-//         me_uri: this._me_uri,
-//         prisoners_uri: this._prisoners_uri,
-//     };
-// });
-
-// Bahaman.Client.prototype.__defineSetter__('state', function(a_val) {
-//     var state = {
-//         _tested: false,
-//         _email_address: null,
-//         _password: null,
-//         _hint_uri: urlparse.urljoin(document.baseURI, 'hint.cgi'),
-//         _server_uri: null,
-//         _me_uri: null,
-//         _prisoners_uri: null,
-//     };
-
-//     $.extend(state, a_val);
-//     $.extend(this, state);
-// });
-
     /*====================================================================*\
       The tested me URI associated with this object. This is set (eventually) by
       a successful call to the testLogin method. */
@@ -214,7 +185,7 @@ Bahaman.Client.prototype.__defineGetter__('prisoners_uri', function() {
     //---- Public methods ------------------------------------------------
 
     /*====================================================================*\
-      Make an AJAX call to a_uri to submit a guess a_guess. This triggers
+      Makes an AJAX call to a_uri to submit a guess a_guess. This triggers
       either a SIG_GUESS_OKAY event or a SIG_GUESS_FAIL event. */
 Bahaman.Client.prototype.guess = function(a_uri, a_guess) {
     var data = {
@@ -225,9 +196,9 @@ Bahaman.Client.prototype.guess = function(a_uri, a_guess) {
 }
 
     /*====================================================================*\
-      Make an unauthorized AJAX call to get hints for a_word and a_misses.
-      This triggers either a SIG_HINT_OKAY event or a SIG_HINT_FAIL
-      event. */
+      Makes an unauthorized AJAX call to get hints for a_word and
+      a_misses. This triggers either a SIG_HINT_OKAY event or a
+      SIG_HINT_FAIL event. */
 Bahaman.Client.prototype.hint = function(a_word, a_misses) {
     var uri = this.hint_uri + '?word=' + encodeURIComponent(a_word) + '&misses=' + encodeURIComponent(a_misses);
 
@@ -235,7 +206,7 @@ Bahaman.Client.prototype.hint = function(a_word, a_misses) {
 }
 
     /*====================================================================*\
-      Make an unauthorized AJAX call to create a new account from the
+      Makes an unauthorized AJAX call to create a new account from the
       email_address and password members. This triggers either a
       SIG_NEW_ACCT_OKAY event or a SIG_NEW_ACCT_FAIL event. */
 Bahaman.Client.prototype.newAccount = function() {
@@ -248,14 +219,14 @@ Bahaman.Client.prototype.newAccount = function() {
 }
 
     /*====================================================================*\
-      Make an AJAX call to start a new game. This triggers either a
+      Makes an AJAX call to start a new game. This triggers either a
       SIG_NEW_PRISONER_OKAY event or a SIG_NEW_PRISONER_FAIL event. */
 Bahaman.Client.prototype.newPrisoner = function() {
     return this._jsonRequest(this.prisoners_uri, Bahaman.Client.SIG_NEW_PRISONER_OKAY, Bahaman.Client.SIG_NEW_PRISONER_FAIL, { method: 'POST' });
 }
 
     /*====================================================================*\
-      Make an AJAX call to retrieve the state of an existing game. This
+      Makes an AJAX call to retrieve the state of an existing game. This
       triggers either a SIG_PRISONER_OKAY event or a SIG_PRISONER_FAIL
       event. */
 Bahaman.Client.prototype.prisoner = function(a_uri) {
@@ -263,11 +234,11 @@ Bahaman.Client.prototype.prisoner = function(a_uri) {
 }
 
     /*====================================================================*\
-      Make an AJAX call to retrieve the states of existing games. If a_uri
-      is present, it is used. Otherwise, prisoners_uri is used. (This is
-      to enable paging, which appears broken; see "Server Issues" section
-      in README.) This triggers either a SIG_PRISONERS_OKAY event or a
-      SIG_PRISONERS_FAIL event. */
+      Makes an AJAX call to retrieve the states of existing games. If
+      a_uri is present, it is used. Otherwise, prisoners_uri is
+      used. (This is to enable paging, which appears broken; see "Server
+      Issues" section in README.) This triggers either a
+      SIG_PRISONERS_OKAY event or a SIG_PRISONERS_FAIL event. */
 Bahaman.Client.prototype.prisoners = function(a_uri /* = null */) {
     var uri = (! a_uri)
         ? this.prisoners_uri
@@ -277,25 +248,11 @@ Bahaman.Client.prototype.prisoners = function(a_uri /* = null */) {
 }
 
     /*====================================================================*\
-      Make an AJAX call to server_uri to check the validity of the login
+      Makes an AJAX call to server_uri to check the validity of the login
       information. This triggers either a SIG_LOGIN_OKAY event or a
       SIG_LOGIN_FAIL event. */
 Bahaman.Client.prototype.testLogin = function() {
     return this._jsonRequest(this._server_uri, Bahaman.Client.SIG_LOGIN_OKAY, Bahaman.Client.SIG_LOGIN_FAIL, { on_success: this._testLoginSucceed.bind(this) });
-
-    // // Force authorization (even if we don't have a login yet)
-    // var headers = {};
-
-    // if (this.auth_basic === null) {
-    //     var event = {
-    //         type: Bahaman.Client.SIG_LOGIN_FAIL,
-    //         client: this,
-    //     };
-
-    //     return $.event.trigger(event);
-    // }
-
-    // return this._jsonRequest(this._server_uri, Bahaman.Client.SIG_LOGIN_OKAY, Bahaman.Client.SIG_LOGIN_FAIL, 'GET', null, headers, this._testLoginSucceed.bind(this));
 }
 
     //---- Private class properties --------------------------------------
@@ -500,9 +457,9 @@ Bahaman.Game.__defineGetter__('STATES', function() {
     //---- Public class methods ------------------------------------------
 
     /*====================================================================*\
-      Comparison function for two Game objects used in to sort them, first
-      by whether they are active (with active games appearing first), then
-      by ascending inception date. */
+      Compares two Game objects to sort them, first by whether they are
+      active (with active games appearing first), then by ascending
+      inception date. */
 Bahaman.Game.compare = function(a_l, a_r) {
     var l_state = a_l._state;
     var r_state = a_r._state;
@@ -517,7 +474,7 @@ Bahaman.Game.compare = function(a_l, a_r) {
         }
     }
 
-    return l_state.imprisoned_at - r_state.imprisoned_at;
+    return r_state.imprisoned_at - l_state.imprisoned_at;
 }
 
     //---- Public properties ---------------------------------------------
@@ -562,7 +519,7 @@ Bahaman.Game.prototype.__defineSetter__('state', function(a_val) {
 });
 
 /*========================================================================*\
-  Class for interacting with a Balanced Hangman server. */
+  Class for handling DOM updates and responding to user input. */
 Bahaman.Screen = function() {
     // Wire up the handlers
     var guessOkay = this._guessOkay.bind(this);
@@ -735,12 +692,9 @@ Bahaman.Screen.indexes = function(a_spec) {
     //---- Public methods ------------------------------------------------
 
     /*====================================================================*\
-      Activate a game selected from the prisoners list. */
+      Activates a game selected from the prisoners list. */
 Bahaman.Screen.prototype.gameSelect = function(a_event) {
-    this._activateGame($(a_event.target).parents('#prisoners_list li').prop('_game'));
-    this.prisonersGo();
-
-    return false;
+    return this._activateGame($(a_event.target).parents('#prisoners_list li').prop('_game'));
 }
 
     /*====================================================================*\
@@ -854,10 +808,33 @@ Bahaman.Screen.prototype.prisonersGo = function(a_event /* = null */) {
     return false;
 }
 
+    //---- Private class methods -----------------------------------------
+
+    /*====================================================================*\
+      Wraps a_html with a link to a_word at dictionary.com. */
+Bahaman.Screen._dictionary = function(a_word, a_html) {
+    return '<a href="http://dictionary.reference.com/browse/' + encodeURI(a_word) + '" target="_blank">' + a_html + '</a>';
+}
+
+    /*====================================================================*\
+      Replaces asterisks with '&ensp;' for displaying the word associated
+      with the active game. */
+Bahaman.Screen._word = function(a_word) {
+    var word = $('#word');
+
+    word.text(a_word)
+        .html(word.text().replace(/\*/g, '&ensp;'))
+        .lettering();
+
+    if (a_word.indexOf('*') < 0) {
+        word.html(Bahaman.Screen._dictionary(a_word, word.html()));
+    }
+}
+
     //---- Private methods -----------------------------------------------
 
     /*====================================================================*\
-      Set the active game. */
+      Sets the active game. */
 Bahaman.Screen.prototype._activateGame = function(a_game /* = null */) {
     var game = (typeof(a_game) === 'undefined')
         ? null
@@ -875,7 +852,7 @@ Bahaman.Screen.prototype._activateGame = function(a_game /* = null */) {
 }
 
     /*====================================================================*\
-      Handle a failed submitted guess. */
+      Handles a failed submitted guess. */
 Bahaman.Screen.prototype._guessFail = function(a_event) {
     var game = $('#game').prop('_game');
 
@@ -888,7 +865,7 @@ Bahaman.Screen.prototype._guessFail = function(a_event) {
 }
 
     /*====================================================================*\
-      Handle a successfully submitted guess. */
+      Handles a successfully submitted guess. */
 Bahaman.Screen.prototype._guessOkay = function(a_event) {
     var game = $('#game').prop('_game');
 
@@ -902,7 +879,7 @@ Bahaman.Screen.prototype._guessOkay = function(a_event) {
 }
 
     /*====================================================================*\
-      Handle a failed hint request. */
+      Handles a failed hint request. */
 Bahaman.Screen.prototype._hintFail = function(a_event) {
     var msg = '';
 
@@ -921,7 +898,7 @@ Bahaman.Screen.prototype._hintFail = function(a_event) {
 }
 
     /*====================================================================*\
-      Handle a successful hint request. */
+      Handles a successful hint request. */
 Bahaman.Screen.prototype._hintOkay = function(a_event) {
     var frequencies = a_event.rsp_data.frequencies;
 
@@ -968,7 +945,7 @@ Bahaman.Screen.prototype._loginFail = function(a_event) {
 }
 
     /*====================================================================*\
-      Handle a successful login. */
+      Handles a successful login. */
 Bahaman.Screen.prototype._loginOkay = function(a_event) {
     if (Bahaman._.client.email_address === null) {
         return this._loginFail(a_event);
@@ -981,7 +958,7 @@ Bahaman.Screen.prototype._loginOkay = function(a_event) {
 }
 
     /*====================================================================*\
-      Update the status message with a_err. */
+      Updates the status message with a_err. */
 Bahaman.Screen.prototype._messageErr = function(a_err) {
     return $('#message').removeClass('okay pending')
         .addClass('err')
@@ -989,13 +966,13 @@ Bahaman.Screen.prototype._messageErr = function(a_err) {
 }
 
     /*====================================================================*\
-      Update the status message with the current login. */
+      Updates the status message with the current login. */
 Bahaman.Screen.prototype._messageLoggedIn = function() {
     this._messageOkay('Logged in as <' + Bahaman._.client.email_address + '>');
 }
 
     /*====================================================================*\
-      Update the status message with a_msg. */
+      Updates the status message with a_msg. */
 Bahaman.Screen.prototype._messageOkay = function(a_msg) {
     return $('#message').removeClass('err pending')
         .addClass('okay')
@@ -1003,7 +980,7 @@ Bahaman.Screen.prototype._messageOkay = function(a_msg) {
 }
 
     /*====================================================================*\
-      Update the status message with a_msg, where a_msg is a temporary
+      Updates the status message with a_msg, where a_msg is a temporary
       status message. */
 Bahaman.Screen.prototype._messagePending = function(a_msg) {
     return $('#message').removeClass('err okay')
@@ -1012,13 +989,13 @@ Bahaman.Screen.prototype._messagePending = function(a_msg) {
 }
 
     /*====================================================================*\
-      Handle a successful request to start a new game. */
+      Handles a successful request to start a new game. */
 Bahaman.Screen.prototype._newPrisonerOkay = function(a_event) {
     return this._activateGame(new Bahaman.Game(a_event.rsp_data.contents));
 }
 
     /*====================================================================*\
-      Clear the prisoners list and show a loading graphic. */
+      Clears the prisoners list and shows a loading graphic. */
 Bahaman.Screen.prototype._prisonersLoading = function() {
     $('#prisoners_first').prop('disabled', true)
         .removeProp('_prisoners_nav_uri')
@@ -1045,7 +1022,7 @@ Bahaman.Screen.prototype._prisonersLoading = function() {
 }
 
     /*====================================================================*\
-      Handle a successful request to retrieve a list of prisoners. */
+      Handles a successful request to retrieve a list of prisoners. */
 Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
     $('#login_show').prop('disabled', false);
     $('#prisoners_list .loading').css('display', 'none');
@@ -1092,7 +1069,6 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
 
     var active_game = $('#game').prop('_game');
     games.sort(Bahaman.Game.compare);
-    var now = Date.now();
 
     for (var game in games) {
         game = games[game];
@@ -1106,70 +1082,8 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
         var list_item = list_item_tmpl.clone();
         list_item.removeAttr('id')
             .removeAttr('style')
-            .addClass('game_' + game.state.state)
             .appendTo(list);
-        var list_item_div = list_item.find('div:first-of-type');
-        var word = list_item_div.text(game.state.word)
-            .html();
-        var list_item_div_html = '';
-
-        if (game.state.state === 'help') {
-            var uri = list_item_div.text(game.state.uri)
-                .html();
-            list_item_div_html += '<a href="#">' + word + '</a>';
-        } else {
-            list_item_div_html += word;
-        }
-
-        list_item_div_html += '<br>';
-        var guesses = [];
-        var i;
-
-        for (i in game.state.hits) {
-            guesses.push({
-                'l': list_item_div.text(game.state.hits[i])
-                    .html(),
-                's': 'hit',
-            });
-        }
-
-        for (i in game.state.misses) {
-            guesses.push({
-                'l': list_item_div.text(game.state.misses[i])
-                    .html(),
-                's': 'miss',
-            });
-        }
-
-        guesses.sort(function (a_l, a_r) {
-            return (a_l.l < a_r.l)
-                ? -1
-                : (a_l.l > a_r.l)
-                    ? 1
-                    : 0;
-        });
-
-        for (i = 0;
-                i < guesses.length;
-                ++i) {
-            guesses[i] = '<span class="' + guesses[i].s + '">'
-                + guesses[i].l
-                + '</span>';
-        }
-
-        list_item_div_html += guesses.join('')
-            + '<br>'
-            + parseInt((now - game.state.imprisoned_at) / 86400000) + ' days old';
-
-        if (game.state.state === 'help') {
-            list_item_div_html += '<br>'
-                + game.state.guesses_remaining + ' tries left';
-        }
-
-        list_item_div.html(list_item_div_html)
-            .find('a')
-            .click(this.gameSelect.bind(this));
-        list_item.prop('_game', game);
+        this._updatePrisonersListItem(list_item, game);
     }
 
     this._messageLoggedIn();
@@ -1178,7 +1092,8 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
 }
 
     /*====================================================================*\
-      Update the state of the active game. */
+      Updates the active game animation by one frame and schedules the
+      next update. */
 Bahaman.Screen.prototype._spriteAnimRun = function(a_game, a_start, a_frame_rate /* = 50 */, a_loop /* = false */) {
     var frame_rate = (typeof(a_frame_rate) === 'undefined')
         ? 50
@@ -1222,13 +1137,13 @@ Bahaman.Screen.prototype._spriteAnimRun = function(a_game, a_start, a_frame_rate
 }
 
     /*====================================================================*\
-      Update the state of the active game. */
+      Stops the active game animation. */
 Bahaman.Screen.prototype._spriteAnimStop = function() {
     $('#progress_counter').removeProp('_anim_timeout_id');
 }
 
     /*====================================================================*\
-      Update the server status message in the account window. */
+      Updates the server status message in the account window. */
 Bahaman.Screen.prototype._updateModalLoginMessage = function(a_msg) {
     $("#login input[name='server_uri'][type='url']").val(Bahaman._.client._server_uri);
     $("#login input[name='email_address'][type='email']").val(Bahaman._.client.email_address);
@@ -1245,10 +1160,8 @@ Bahaman.Screen.prototype._updateModalLoginMessage = function(a_msg) {
 }
 
     /*====================================================================*\
-      Update the state of the active game. */
-Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
-    $('#game').prop('_game', a_game);
-    Bahaman.Screen._word(a_game.state.word);
+      Updates the progress counter of the active game. */
+Bahaman.Screen.prototype._updateProgressCounter = function(a_game) {
     var progress_counter = $('#progress_counter');
     var new_sprite_uri = progress_counter.css('background-image');
     new_sprite_uri = new_sprite_uri.match(/^(?:url\(["'])?(.*)(?:["']\))?$/);
@@ -1354,16 +1267,100 @@ Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
     }
 }
 
-    //---- Private class methods -----------------------------------------
+    /*====================================================================*\
+      Updates the prisoners list item a_list_item with a_game. */
+Bahaman.Screen.prototype._updatePrisonersListItem = function(a_list_item, a_game) {
+    a_list_item.removeClass()
+        .addClass('game_' + a_game.state.state);
+    var list_item_div = a_list_item.find('div:first-of-type');
+    var word = list_item_div.text(a_game.state.word)
+        .html();
+    var list_item_div_html = '';
+
+    if (a_game.state.state === 'help') {
+        var uri = list_item_div.text(a_game.state.uri)
+            .html();
+        list_item_div_html += '<a href="#">' + word + '</a>';
+    } else if (a_game.state.state === 'rescued') {
+        list_item_div_html += Bahaman.Screen._dictionary(a_game.state.word, word);
+    } else {
+        list_item_div_html += word;
+    }
+
+    list_item_div_html += '<br>';
+    var guesses = [];
+    var i;
+
+    for (i in a_game.state.hits) {
+        guesses.push({
+            'l': list_item_div.text(a_game.state.hits[i])
+                .html(),
+            's': 'hit',
+        });
+    }
+
+    for (i in a_game.state.misses) {
+        guesses.push({
+            'l': list_item_div.text(a_game.state.misses[i])
+                .html(),
+            's': 'miss',
+        });
+    }
+
+    guesses.sort(function (a_l, a_r) {
+        return (a_l.l < a_r.l)
+            ? -1
+            : (a_l.l > a_r.l)
+                ? 1
+                : 0;
+    });
+
+    for (i = 0;
+            i < guesses.length;
+            ++i) {
+        guesses[i] = '<span class="' + guesses[i].s + '">'
+            + guesses[i].l
+            + '</span>';
+    }
+
+    var now = Date.now();
+    list_item_div_html += guesses.join('')
+        + '<br>'
+        + parseInt((now - a_game.state.imprisoned_at) / 86400000) + ' days old';
+
+    if (a_game.state.state === 'help') {
+        list_item_div_html += '<br>'
+            + a_game.state.guesses_remaining + ' tries left';
+        list_item_div.html(list_item_div_html)
+            .find('a')
+            .click(this.gameSelect.bind(this));
+    } else {
+        list_item_div.html(list_item_div_html);
+    }
+
+    a_list_item.prop('_game', a_game);
+}
 
     /*====================================================================*\
-      Helper method to replace asterisks with '&ensp;' for displaying the
-      word associated with the active game. */
-Bahaman.Screen._word = function(a_word) {
-    var word = $('#word');
-    word.text(a_word)
-        .html(word.text().replace(/\*/g, '&ensp;'))
-        .lettering();
+      Updates the state of the active game. */
+Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
+    $('#game').prop('_game', a_game);
+    Bahaman.Screen._word(a_game.state.word);
+    var list_items = $('#prisoners_list li');
+
+    for (var i = 0;
+            i < list_items.length;
+            ++i) {
+        var list_item = $(list_items[i]);
+        var list_item_game = list_item.prop('_game');
+
+        if (list_item_game
+                && list_item_game.state.id === a_game.state.id) {
+            this._updatePrisonersListItem(list_item, a_game);
+        }
+    }
+
+    this._updateProgressCounter(a_game);
 }
 
 //---- Initialization ----------------------------------------------------

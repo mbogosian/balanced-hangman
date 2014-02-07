@@ -48,7 +48,8 @@
 }
 
 #progress_counter {
-    background-image: url('media/requiem_for_a_dream-160x86-0:11-12:104,105:13-106:127.png');
+    // background-image: url('media/requiem_for_a_dream-160x86-0:11-12:104,105:13-106:127.png');
+    background-image: url('media/requiem_for_a_dream-160x86-0:11-12:104,105:13-106:116,117:107,106:117,118:127.png');
     background-repeat: no-repeat;
     display: inline-block;
     font-size: 400%;
