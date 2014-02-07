@@ -32,7 +32,7 @@
                 <h1>&ldquo;BaHaMan!&rdquo;</h1>
 
                 <h2>
-                    by <a href="http://linkd.in/1fCvWT6" target="_blank">Matt Bogosian</a><br>
+                    by <a href="http://linkd.in/1fBEffR" target="_blank">Matt Bogosian</a><br>
                     <span class="small">(You know, that guy you should <em>definitely</em> hire. <a id="seriously_show" class="egg_a" href="#" target="_blank">Seriously</a>.)</span>
                 </h2>
 
