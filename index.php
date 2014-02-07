@@ -23,6 +23,8 @@
     <div id="bg">
         <div id="nojs" class="overlay">
             <p><a href="http://www.enable-javascript.com/">Javascript must be enabled</a> for this application to work properly.</p>
+
+            <p>If you are seeing this message from Internet Explorer, this is <a href="https://github.com/mbogosian/balanced-hangman/issues/4" target="_target">a known issue</a>. Until it is resolved, please use <a href="http://mzl.la/1gRGot0" target="_blank">Firefox</a> or <a href="http://bit.ly/LVhB9B" target="_blank">Chrome</a> instead.</p>
         </div>
 
         <div id="main">
