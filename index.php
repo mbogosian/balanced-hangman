@@ -154,7 +154,7 @@
 
             <div class="controls_right">
                 <button id="login_go" type="submit">Log in</button>
-                <button id="login_create" type="submit">Create new</button>
+                <button id="login_create" type="submit">New account</button>
             </div>
 
             <div class="controls_left"><button id="login_cancel" class="simplemodal-close" type="submit">Cancel</button></div>
