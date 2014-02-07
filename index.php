@@ -118,7 +118,7 @@
 
                     <div>
                         <label for="server_uri">Server URI:</label>
-                        <input name="server_uri" type="url" placeholder="https://hangman.example.dom/" required></input>
+                        <input name="server_uri" type="url" placeholder="https://hangman.example.dom/" required disabled></input>
                     </div>
                 </fieldset>
 
