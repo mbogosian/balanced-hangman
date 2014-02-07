@@ -15,7 +15,9 @@
         @import url('http://fonts.googleapis.com/css?family=Rock+Salt|Special+Elite|Ubuntu');
         @import url('_/bahaman.css');
     --></style>
+
     <title>BaHaMan (BAlanced HAngMAN)</title>
+    <link href="" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
     <div id="bg">
@@ -35,7 +37,7 @@
                 </h2>
 
                 <div id="game">
-                    <div id="progress_counter" class="done">0</div>
+                    <div id="progress_counter" class="game_help">0</div>
                     <div id="word">b*l*ncedh*ngm*n</div>
                 </div>
 
@@ -137,8 +139,8 @@
                     <legend>Extras</legend>
 
                     <div>
-                        <label for="sprite_file">Sprite file:</label>
-                        <input name="sprite_file" type="text" placeholder="[NAME]-[WIDTH]x[HEIGHT]-[PLAY0]:[PLAYn]-[WIN0]:[WINn]-[LOSE0]:[LOSEn].[EXT]" disabled></input>
+                        <label for="theme_css">Theme CSS:</label>
+                        <input name="theme_css" type="text" placeholder="uri_to_theme.css" disabled></input>
                     </div>
                 </fieldset>
 
@@ -151,7 +153,7 @@
 
             <div class="controls_right">
                 <button id="login_go" type="submit">Log in</button>
-                <button id="login_create" type="submit" disabled>Create new</button>
+                <button id="login_create" type="submit">Create new</button>
             </div>
 
             <div class="controls_left"><button id="login_cancel" class="simplemodal-close" type="submit">Cancel</button></div>

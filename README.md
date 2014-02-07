@@ -41,6 +41,49 @@ Or on OS X:
 Known Issues
 ------------
 
+- I will reiterate this again later, but I am *not* very experienced in UI
+  design/implementation (see [Notes On The
+  Architecture](#Notes On The Architecture)). As such, I have likely made
+  poor decisions that result in some unpleasant user experiences. Also,
+  this is my first real foray into client-side JavaScript and jQuery. I
+  have likely abused either or both.
+
+- I am not familiar with JavaScript unit test practices. Because I was
+  already spooling up on learning browser-side JavaScript, jQuery, DOM
+  manipulation, etc., I (unfortunately) did not take the time to find an
+  appropriate package (e.g., [QUnit](http://bit.ly/1kiJBSQ)) and learn how
+  to use it. In retrospect, this was likely a mistake. I’m sure my code
+  organization suffered (I tend to write shorter, more modular methods
+  when I engage test-driven development), and my implementation time
+  increased (once you get used to test automation, it is downright painful
+  to do anything else). Who knows? Had I bothered, I might have even been
+  able to claim that it works in Internet Explorer! [The world may never
+  know....](http://bit.ly/1nYqEW2)
+
+  That being said, I do like writing tests, and `hint.cgi` does contain
+  some specific to that script. (Although to me, it’s a bit weird to have
+  them sitting in the same file as the main script. I usually stick them
+  in `test/...` or something.) To run:
+
+  ```
+  % ./hint.cgi --test
+  # Or
+  % python hint.cgi --test
+  ```
+
+- There are probably several ways to save on the number of DOM/CSS
+  manipulations and server round-trips. This implementation is a prototype
+  (i.e., it attempts to get things functionally acceptable). Not much
+  effort has been made to tune performance. **Hints Mode**&trade;, for
+  example, is really labor intensive on the server side. It would probably
+  benefit from some kind of short-term caching mechanism.
+
+- The authentication model in the server reference implementation doesn’t
+  jive with the retry logic in many libraries’ authentication handlers
+  (see [Authentication Oddities](#Authentication Oddities)). But this
+  implementation’s the rather silly blind submission of a hand-created
+  Authorization header with certain requests seems to work.
+
 - Little thought has been given to concurrency corner cases. For example,
   if you change a user’s password from one client while the another is
   running for that same user, the latter does not deal gracefully with the
@@ -50,27 +93,9 @@ Known Issues
   (see `Server Issues`_). Aside from the paging issue, solutions for these
   problems do exist, but none has been implemented at this point.
 
-- I will reiterate this again later, but I am *not* very experienced in UI
-  design/implementation (see [Notes On The
-  Architecture](#Notes On The Architecture)). As such, I have likely made
-  poor decisions that result in some unpleasant user experiences. Also,
-  this is my first real foray into client-side JavaScript and jQuery. I
-  have likely abused either or both.
+- TODO
 
-- There are probably several ways to save on the number of DOM/CSS
-  manipulations and server round-trips. This implementation is a prototype
-  (i.e., it attempts to get things functionally acceptable). Not much
-  effort has been made to tune performance. Hint mode, for example, is
-  really labor intensive on the server side. It would probably benefit
-  from some kind of short-term caching mechanism.
-
-- The authentication model in the server reference implementation doesn’t
-  jive with the retry logic in many libraries’ authentication handlers
-  (see [Authentication Oddities](#Authentication Oddities)). But this
-  implementation’s the rather silly blind submission of a hand-created
-  Authorization header with certain requests seems to work.
-
-- The UI does not expose functionality to change one’s account password,
+  The UI does not expose functionality to change one’s account password,
   even though such functionality exists on the server. This should be easy
   enough to add, perhaps through the account screen.
 
@@ -110,10 +135,10 @@ Known Issues
   than an extended interview, I would focus on cross browser
   compatibility. But it just isn’t sexy enough for me to do right now.
 
-- The [word library that I use to support hint
-  mode](file:///usr/shar/dict/words) is missing some words (as of this
-  writing, I have found it is missing “superpigmentation” and “bryce”). In
-  these cases, it can actually lead the user astray.
+- The [word library that I use to support **Hints
+  Mode**&trade;](file:///usr/shar/dict/words) is missing some words (as of
+  this writing, I have found it is missing “superpigmentation” and
+  “bryce”). In these cases, it can actually lead the user astray.
 
 - Enabling **Hints Mode**&trade; using Firefox on OS X may result in audio
   anomalies. I’m pretty sure this is a bug in Firefox.
@@ -466,8 +491,8 @@ Auto-Didactic Socratic Method (As Opposed To Frequently Asked) Questions
 
   So I caved, shelved Twisted and decided to learn jQuery. Maybe someday
   I’ll clean up the Twisted version and check it in as a sub-directory to
-  this project. As you can see from my hint.cgi mode implementation, I
-  just can’t seem to get away from Python.
+  this project. As you can see from `hint.cgi`, I just can’t seem to get
+  away from Python.
 
 Copyright
 ---------

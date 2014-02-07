@@ -282,7 +282,7 @@ Bahaman.Client.prototype.prisoners = function(a_uri /* = null */) {
       SIG_LOGIN_FAIL event. */
 Bahaman.Client.prototype.testLogin = function() {
     return this._jsonRequest(this._server_uri, Bahaman.Client.SIG_LOGIN_OKAY, Bahaman.Client.SIG_LOGIN_FAIL, { on_success: this._testLoginSucceed.bind(this) });
-    
+
     // // Force authorization (even if we don't have a login yet)
     // var headers = {};
 
@@ -493,6 +493,10 @@ Bahaman.Game.__defineGetter__('ALPHABET', function() {
     return 'abcdefghijklmnopqrstuvwxyz';
 });
 
+Bahaman.Game.__defineGetter__('STATES', function() {
+    return [ 'dead', 'head', 'rescued' ];
+});
+
     //---- Public class methods ------------------------------------------
 
     /*====================================================================*\
@@ -552,7 +556,7 @@ Bahaman.Game.prototype.__defineSetter__('state', function(a_val) {
         state.misses[i] = state.misses[i].toLowerCase();
     }
 
-    var total_guesses = state.guesses_remaining + state.hits.length + state.misses.length;
+    state.total_guesses = state.guesses_remaining + state.hits.length + state.misses.length;
 
     this._state = state;
 });
@@ -674,12 +678,69 @@ Bahaman.Screen = function() {
     });
 }
 
+    //---- Public class methods ------------------------------------------
+
+    /*====================================================================*\
+      Enumerates from a_spec an array of integers. a_spec is in the
+      format:
+
+        [1-9][0-9]*(:[1-9][0-9]*)?(,[1-9][0-9]*(:[1-9][0-9]*)?)*
+
+      For example:
+
+        '1'         =>  [1]
+        '1:3'       =>  [1, 2, 3]
+        '1,3'       =>  [1, 3]
+        '1:3,3:1'   =>  [1, 2, 3, 3, 2, 1]
+        '1,4:2'     =>  [1, 4, 3, 2]
+      */
+Bahaman.Screen.indexes = function(a_spec) {
+    var indexes = [];
+    var spec = a_spec.replace(/\s/g, '');
+
+    if (spec.match(/[1-9][0-9]*(?::[1-9][0-9]*)?(?:,[1-9][0-9]*(?::[1-9][0-9]*)?)*/)) {
+        var groups = a_spec.split(',');
+
+        for (var group in groups) {
+            group = groups[group];
+            var ranges = group.split(':');
+            var s, e;
+
+            if (ranges.length === 2) {
+                s = parseInt(ranges[0]);
+                e = parseInt(ranges[1]);
+            } else {
+                s = e = parseInt(ranges[0]);
+            }
+
+            if (s > e) {
+                for (var i = s;
+                        i >= e;
+                        i -= 1) {
+                    indexes.push(i);
+                }
+            } else {
+                for (var i = s;
+                        i <= e;
+                        i += 1) {
+                    indexes.push(i);
+                }
+            }
+        }
+    }
+
+    return indexes;
+}
+
     //---- Public methods ------------------------------------------------
 
     /*====================================================================*\
       Activate a game selected from the prisoners list. */
 Bahaman.Screen.prototype.gameSelect = function(a_event) {
-    return this._activateGame($(a_event.target).parents('#prisoners_list li').prop('_game'));
+    this._activateGame($(a_event.target).parents('#prisoners_list li').prop('_game'));
+    this.prisonersGo();
+
+    return false;
 }
 
     /*====================================================================*\
@@ -714,12 +775,20 @@ Bahaman.Screen.prototype.loginGo = function(a_event) {
         this._messagePending('Creating account...');
         Bahaman._.client.newAccount();
     } else {
+        var server_uri = $("#login input[name='server_uri'][type='url']").val();
         var email_address = $("#login input[name='email_address'][type='email']").val();
         var password = $("#login input[name='password'][type='password']").val();
-        var server_uri = $("#login input[name='server_uri'][type='url']").val();
 
         if (Bahaman._.client.server_uri !== server_uri) {
             Bahaman._.client.server_uri = 'https://balanced-hangman.herokuapp.com/';
+        }
+
+        var theme_css = $("#login input[name='theme_css'][type='text']").val();
+        var theme_link = $("head link[rel='stylesheet'][type='text/css']");
+
+        if (theme_css
+                && theme_css !== theme_link.attr('href')) {
+            theme_link.attr('href', theme_css);
         }
 
         Bahaman._.client.email_address = email_address;
@@ -741,7 +810,7 @@ Bahaman.Screen.prototype.loginShow = function(a_msg /* = null */) {
         : a_msg;
 
     var updateModalLoginMessage = this._updateModalLoginMessage.bind(this);
- 
+
     var shown = $('#login').modal({
         onShow: function(a_dialog) {
             updateModalLoginMessage(msg);
@@ -799,7 +868,6 @@ Bahaman.Screen.prototype._activateGame = function(a_game /* = null */) {
         .unbind('click.cheat_end');
 
     if (game) {
-        this.prisonersGo();
         this._updateSelectedGame(game);
     }
 
@@ -990,20 +1058,28 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
 
     if (prev) {
         $('#prisoners_first').click(this.prisonersGo.bind(this))
-            .prop('_prisoners_nav_uri', first)
-            .prop('disabled', false);
+            .prop({
+                '_prisoners_nav_uri': first,
+                'disabled': false,
+            });
         $('#prisoners_prev').click(this.prisonersGo.bind(this))
-            .prop('_prisoners_nav_uri', prev)
-            .prop('disabled', false);
+            .prop({
+                '_prisoners_nav_uri': prev,
+                'disabled': false,
+            });
     }
 
     if (next) {
         $('#prisoners_next').click(this.prisonersGo.bind(this))
-            .prop('_prisoners_nav_uri', next)
-            .prop('disabled', false);
+            .prop({
+                '_prisoners_nav_uri': next,
+                'disabled': false,
+            });
         $('#prisoners_last').click(this.prisonersGo.bind(this))
-            .prop('_prisoners_nav_uri', last)
-            .prop('disabled', false);
+            .prop({
+                '_prisoners_nav_uri': last,
+                'disabled': false,
+            });
     }
 
     var list = $('#prisoners_list');
@@ -1102,6 +1178,56 @@ Bahaman.Screen.prototype._prisonersOkay = function(a_event) {
 }
 
     /*====================================================================*\
+      Update the state of the active game. */
+Bahaman.Screen.prototype._spriteAnimRun = function(a_game, a_start, a_frame_rate /* = 50 */, a_loop /* = false */) {
+    var frame_rate = (typeof(a_frame_rate) === 'undefined')
+        ? 50
+        : a_frame_rate;
+
+    var loop = (typeof(a_loop) === 'undefined')
+        ? false
+        : a_loop;
+
+    var progress_counter = $('#progress_counter');
+    var still_running = (typeof(progress_counter.prop('_anim_timeout_id')) !== 'undefined');
+
+    if (still_running) {
+        // Advance the counter
+        var offsets = progress_counter.prop('_' + a_game.state.state + '_offsets');
+        var last_offset = progress_counter.prop('_last_offset');
+        last_offset = (last_offset + 1);
+
+        if (a_loop) {
+            last_offset %= offsets.length;
+        }
+
+        if (last_offset < offsets.length) {
+            // Keep going
+            var height = parseInt(progress_counter.css('height'));
+            var last_state = progress_counter.prop('_last_state');
+            progress_counter.prop('_last_offset', last_offset)
+                .css('background-position', 'left 0px top -' + height * offsets[last_offset] + 'px');
+        } else {
+            // We're done
+            progress_counter.removeProp('_anim_timeout_id');
+            still_running = false;
+        }
+    }
+
+    // Set up the next callback
+    if (still_running
+        || a_start) {
+        progress_counter.prop('_anim_timeout_id', window.setTimeout(this._spriteAnimRun.bind(this, a_game, false, frame_rate, loop), frame_rate));
+    }
+}
+
+    /*====================================================================*\
+      Update the state of the active game. */
+Bahaman.Screen.prototype._spriteAnimStop = function() {
+    $('#progress_counter').removeProp('_anim_timeout_id');
+}
+
+    /*====================================================================*\
       Update the server status message in the account window. */
 Bahaman.Screen.prototype._updateModalLoginMessage = function(a_msg) {
     $("#login input[name='server_uri'][type='url']").val(Bahaman._.client._server_uri);
@@ -1112,11 +1238,9 @@ Bahaman.Screen.prototype._updateModalLoginMessage = function(a_msg) {
         $('#login .status').css('display', 'block')
             .addClass('err');
         $("#login_message").html(a_msg);
-        $("#login_create").prop('disabled', false);
     } else {
         $('#login .status').css('display', 'none')
             .removeClass('err');
-        $("#login_create").prop('disabled', true);
     }
 }
 
@@ -1124,15 +1248,78 @@ Bahaman.Screen.prototype._updateModalLoginMessage = function(a_msg) {
       Update the state of the active game. */
 Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
     $('#game').prop('_game', a_game);
-    var done = a_game.state.state !== 'help';
     Bahaman.Screen._word(a_game.state.word);
-    $('#progress_counter').removeClass()
-        .text(a_game.state.guesses_remaining)
-        .css('opacity', 0.8);
+    var progress_counter = $('#progress_counter');
+    var new_sprite_uri = progress_counter.css('background-image');
+    new_sprite_uri = new_sprite_uri.match(/^(?:url\(["'])?(.*)(?:["']\))?$/);
 
-    if (done) {
-        $('#progress_counter').addClass('done');
+    if (new_sprite_uri) {
+        new_sprite_uri = new_sprite_uri[1];
     }
+
+    var old_sprite_uri = progress_counter.prop('_sprite_uri');
+
+    // Recalculate everything if the sprite URI has changed; note that !=
+    // is needed rather than !== in the if statement, because
+    // new_sprite_uri could be null, and old_sprite_uri could be
+    // undefined, but we want to treat those things as equivalent
+    if (new_sprite_uri != old_sprite_uri) {
+        var parts = new_sprite_uri.match(/^.*-([1-9][0-9]*)x([1-9][0-9]*)-([0-9:,]+)-([0-9:,]+)-([0-9:,]+)(?:\.[^.]*)*$/);
+
+        if (parts) {
+            progress_counter
+                .css({
+                    'background-position': 'left 0px top 0px',
+                    'width': parts[1] + 'px',
+                    'height': parts[2] + 'px',
+                })
+                .prop({
+                    '_sprite_uri': new_sprite_uri,
+                    '_help_offsets': Bahaman.Screen.indexes(parts[3]),
+                    '_rescued_offsets': Bahaman.Screen.indexes(parts[4]),
+                    '_dead_offsets': Bahaman.Screen.indexes(parts[5]),
+                });
+        } else {
+            progress_counter
+                .removeProp('_sprite_uri')
+                .removeProp('_help_offsets')
+                .removeProp('_rescued_offsets')
+                .removeProp('_dead_offsets')
+                .removeProp('_last_state')
+                .removeProp('_last_offset');
+        }
+    }
+
+    // Change the frame and update the counter
+    if (new_sprite_uri) {
+        var offsets = progress_counter.prop('_' + a_game.state.state + '_offsets');
+        var last_state = progress_counter.prop('_last_state');
+        var last_offset = progress_counter.prop('_last_offset');
+
+        if (typeof(last_state) === 'undefined'
+                || typeof(last_offset) === 'undefined'
+                || last_state !== a_game.state.state) {
+            // The state of the game has changed, so we need to switch
+            // counters and offsets
+            last_offset = 0;
+            progress_counter.prop('_last_state', a_game.state.state);
+        } else if (a_game.state.state === 'help') {
+            // Scale guesses to correct frame in sprite
+            var num_guesses = a_game.state.total_guesses - a_game.state.guesses_remaining;
+            last_offset = parseInt(offsets.length * num_guesses / a_game.state.total_guesses);
+        }
+
+        var height = parseInt(progress_counter.css('height'));
+        progress_counter.prop('_last_offset', last_offset)
+            .css('background-position', 'left 0px top -' + height * offsets[last_offset] + 'px');
+    }
+
+    progress_counter.removeClass()
+        .addClass('game_' + a_game.state.state)
+        .text(a_game.state.guesses_remaining)
+        .css({
+            'opacity': '1.0',
+        });
 
     $('#guesses button').prop('disabled', true);
 
@@ -1148,16 +1335,22 @@ Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
             button.addClass('hit');
         } else if (misses.indexOf(c) >= 0) {
             button.addClass('miss');
-        } else if (! done) {
+        } else if (a_game.state.state === 'help') {
             button.prop('disabled', false);
         }
     }
 
-    var hints = $('#hints');
+    if (a_game.state.state === 'help') {
+        var hints = $('#hints');
 
-    if (hints.css('display') !== 'none') {
-        hints.text('Retrieving hints...');
-        Bahaman._.client.hint(a_game.state.word, misses);
+        if (hints.css('display') !== 'none') {
+            hints.text('Retrieving hints...');
+            Bahaman._.client.hint(a_game.state.word, misses);
+        }
+
+        this._spriteAnimStop();
+    } else {
+        this._spriteAnimRun(a_game, true);
     }
 }
 
