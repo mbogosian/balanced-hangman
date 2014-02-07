@@ -19,7 +19,9 @@ Marshall&rsquo;s [GitHub Gist page](http://bit.ly/1kqF5R0).
 
 You can [try out out for yourself](http://bit.ly/1iw9P17). (I highly
 recommend using a recent version of [Firefox](http://mzl.la/1gRGot0) or
-[Chrome](http://bit.ly/LVhB9B).)
+[Chrome](http://bit.ly/LVhB9B). I can confirm it doesn&rsquo;t work on IE
+8. I don&rsquo;t have access to other versions, so I haven&rsquo;t been
+able to check anything else.)
 
 Installation
 ------------
