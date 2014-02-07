@@ -991,7 +991,10 @@ Bahaman.Screen.prototype._messagePending = function(a_msg) {
     /*====================================================================*\
       Handles a successful request to start a new game. */
 Bahaman.Screen.prototype._newPrisonerOkay = function(a_event) {
-    return this._activateGame(new Bahaman.Game(a_event.rsp_data.contents));
+    this._activateGame(new Bahaman.Game(a_event.rsp_data.contents));
+    this.prisonersGo();
+
+    return false;
 }
 
     /*====================================================================*\
