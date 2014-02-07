@@ -19,10 +19,11 @@ Marshall&rsquo;s [GitHub Gist page](http://bit.ly/1kqF5R0).
 
 You can [try out out for yourself](http://bit.ly/1iw9P17). I highly
 recommend using a recent version of [Firefox](http://mzl.la/1gRGot0) or
-[Chrome](http://bit.ly/LVhB9B). I can confirm it doesn&rsquo;t work on IE
-8 (see issue #4). I don&rsquo;t have access to other versions, so I
-haven&rsquo;t been able to check anything else. Mobile is also currently
-broken (see issue #11).
+[Chrome](http://bit.ly/LVhB9B). I can confirm [it doesn&rsquo;t work on IE
+8](/mbogosian/balanced-hangman/issues/4). I don&rsquo;t have access to
+other versions, so I haven&rsquo;t been able to check anything
+else. Mobile is also [currently
+broken](/mbogosian/balanced-hangman/issues/11).
 
 Installation
 ------------
@@ -48,7 +49,7 @@ Or on a reasonably recent version of OS X (I&rsquo;m developing on 10.6):
 Known Issues
 ------------
 
-Known bugs are [tracked on GitHub](./issues).
+Known bugs are [tracked on GitHub](/mbogosian/balanced-hangman/issues).
 
 - I will reiterate this again later, but I am *not* very experienced in UI
   design/implementation (see [Notes On The
@@ -303,7 +304,7 @@ implementation:
   beat me to it with [a more complete
   implementation](http://bit.ly/1n56ZR0). (I am apparently frequently late
   to the party, and often underdressed when I finally arrive.) So I
-  scrapped mine, and used that one.
+  scrapped mine and used that one.
 
   This approach does impose additional requirements. For example, at least
   the proxy script must be hosted from a web server that supports PHP
