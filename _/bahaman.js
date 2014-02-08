@@ -591,12 +591,14 @@ Bahaman.Screen = function() {
 
     $('#guesses button').click(this.guessGo.bind(this));
 
+    var cheat_step = $('#cheat_step')[0];
+    cheat_step.volume -= 0.5;
     var cheat_ambient = $('#cheat_ambient')[0];
     cheat_ambient.volume -= 0.5;
     var cheat_go = $('#cheat_go')[0];
     cheat_go.volume -= 0.5;
-    var cheat_step = $('#cheat_step')[0];
-    cheat_step.volume -= 0.5;
+    var cheat_fail = $('#cheat_fail')[0];
+    cheat_fail.volume -= 0.5;
 
     $('#guess_a').bind('click.cheat_start', function(a_event) {
         $('#guess_a').unbind('click.cheat_start');
@@ -1349,6 +1351,22 @@ Bahaman.Screen.prototype._updatePrisonersListItem = function(a_list_item, a_game
     /*====================================================================*\
       Updates the state of the active game. */
 Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
+    var hints_visible = $('#cheat_code > span:first-of-type');
+    var hints_hidden = $('#cheat_code > span:last-of-type');
+
+    if (hints_visible.text().match(/\S/)
+            && hints_hidden.text().match(/\S/)) {
+        // Well, touch me in the morning, and then just walk away...
+        hints_visible.html(hints_visible.html() + hints_hidden.html())
+            .css('text-decoration', 'line-through');
+        hints_hidden.html('');
+        var cheat_ambient = $('#cheat_ambient')[0];
+        var cheat_fail = $('#cheat_fail')[0];
+        cheat_ambient.pause();
+        cheat_ambient.currentTime = 0;
+        cheat_fail.play();
+    }
+
     $('#game').prop('_game', a_game);
     Bahaman.Screen._word(a_game.state.word);
     var list_items = $('#prisoners_list li');

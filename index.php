@@ -83,6 +83,7 @@
                 <audio id="cheat_step" src="_/media/smb_coin.wav" preload="auto"></audio>
                 <audio id="cheat_ambient" src="_/media/02-underworld.mp3" preload="auto" loop></audio>
                 <audio id="cheat_go" src="_/media/smb_powerup.wav" preload="auto"></audio>
+                <audio id="cheat_fail" src="_/media/smb_mariodie_gameover.wav" preload="auto"></audio>
                 <textarea id="hints">Hints Mode&trade; activated!</textarea>
             </div>
 
