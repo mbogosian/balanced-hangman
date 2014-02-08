@@ -1017,12 +1017,13 @@ Bahaman.Screen.prototype._prisonersLoading = function() {
         .removeProp('_prisoners_nav_uri')
         .unbind('click');
 
-    var prisoners_list_items = $('#prisoners_list li');
+    var list_items = $('#prisoners_list li');
 
     for (var i = 2;
-            i < prisoners_list_items.length;
+            i < list_items.length;
             ++i) {
-        prisoners_list_items[i].remove();
+        var list_item = $(list_items[i]);
+        $(list_item).remove();
     }
 
     $('#prisoners_list .loading').css('display', 'inline');
@@ -1352,7 +1353,7 @@ Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
     Bahaman.Screen._word(a_game.state.word);
     var list_items = $('#prisoners_list li');
 
-    for (var i = 0;
+    for (var i = 2;
             i < list_items.length;
             ++i) {
         var list_item = $(list_items[i]);

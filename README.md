@@ -15,7 +15,7 @@ ChangeLog podcasts when I heard [an interesting
 challenge](http://bit.ly/1bWmcNO) alluded to by then-guest Marshall
 Jones. This is an attempt to address that challenge (also posed via
 [Jareau Wade&rsquo;s blog post](http://bit.ly/1cWX1Pu) as well as
-Marshall&rsquo;s [GitHub Gist page](http://bit.ly/1kqF5R0).
+Marshall&rsquo;s [GitHub Gist page](http://bit.ly/1kqF5R0)).
 
 You can [try out out for yourself](http://bit.ly/1iw9P17). I highly
 recommend using a recent version of [Firefox](http://mzl.la/1gRGot0) or
