@@ -606,20 +606,28 @@ Bahaman.Screen = function() {
     });
 
     $('#guess_a').bind('click.cheat_step', function(a_event) {
-        var visible = $('#cheat_code > span:first-of-type');
-        var hidden = $('#cheat_code > span:last-of-type');
-        var hidden_text = hidden.text();
-        var next_break = hidden_text.indexOf(' ');
+        var hints_visible = $('#cheat_code > span:first-of-type');
+        var hints_hidden = $('#cheat_code > span:last-of-type');
+        var hints_hidden_text = hints_hidden.text();
+        var next_break = hints_hidden_text.indexOf(' ');
 
         if (next_break > 0) {
-            visible.text(visible.text() + ' ' + hidden_text.slice(0, next_break));
-            hidden.text(hidden_text.slice(next_break + 1));
-        } else {
-            visible.text(visible.text() + ' ' + hidden_text);
-            hidden.text('');
+            hints_visible.text(hints_visible.text() + ' ' + hints_hidden_text.slice(0, next_break));
+            hints_hidden.text(hints_hidden_text.slice(next_break + 1));
+        }
+
+        cheat_step.pause();
+        cheat_step.currentTime = 0;
+        cheat_step.play();
+
+        hints_hidden_text = hints_hidden.text();
+        next_break = hints_hidden_text.indexOf(' ');
+
+        if (next_break <= 0) {
             $('#guess_a').unbind('click.cheat_step');
 
             $('#guess_a').bind('click.cheat_end', function(a_event) {
+                hints_hidden.text('');
                 $('#cheat_code').css('display', 'none');
                 $('#hints').css('display', 'inline-block');
                 $('#guess_a').unbind('click.cheat_end')
@@ -629,10 +637,6 @@ Bahaman.Screen = function() {
                 cheat_go.play();
             });
         }
-
-        cheat_step.pause();
-        cheat_step.currentTime = 0;
-        cheat_step.play();
     });
 }
 
@@ -1263,7 +1267,12 @@ Bahaman.Screen.prototype._updateProgressCounter = function(a_game) {
     var hints = $('#hints');
 
     if (hints.css('display') !== 'none') {
-        hints.text('Retrieving hints...');
+        if (a_game.state.hits.length === 0
+                && a_game.state.misses.length === 0) {
+            hints.text('Retrieving hints (this could take a while)...');
+        } else {
+            hints.text('Retrieving hints...');
+        }
         Bahaman._.client.hint(a_game.state.word, misses);
     }
 
@@ -1357,7 +1366,7 @@ Bahaman.Screen.prototype._updateSelectedGame = function(a_game) {
     if (hints_visible.text().match(/\S/)
             && hints_hidden.text().match(/\S/)) {
         // Well, touch me in the morning, and then just walk away...
-        hints_visible.html(hints_visible.html() + hints_hidden.html())
+        hints_visible.html(hints_visible.html())
             .css('text-decoration', 'line-through');
         hints_hidden.html('');
         var cheat_ambient = $('#cheat_ambient')[0];
