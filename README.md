@@ -102,8 +102,9 @@ GitHub](https://github.com/mbogosian/balanced-hangman/issues).
   the failures. Games started on one client may not show up on another for
   a while, etc. Due to an apparent server-side bug in the paging API,
   unpredictable behavior is compounded once a user extends past ten games
-  (see `Server Issues`_). Aside from the paging issue, solutions for these
-  problems do exist, but none has been implemented at this point.
+  (see [Server Issues](#server-issues)). Aside from the paging issue,
+  solutions for these problems do exist, but none has been implemented at
+  this point.
 
 - You can currently trick the application into changing an account
   password by taking advantage of an apparent server bug (see

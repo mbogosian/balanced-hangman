@@ -1,0 +1,249 @@
+#-*-python-*-=============================================================
+"""
+  Copyright (c) 2013 Matt Bogosian <mtb19@columbia.edu>.
+
+  Please see the LICENSE (or LICENSE.txt) file which accompanied this
+  software for rights and restrictions governing its use. If such a file
+  did not accompany this software, then please contact the author before
+  viewing or using this software in any capacity.
+"""
+#=========================================================================
+
+#---- Imports ------------------------------------------------------------
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+import base64
+import json
+import cStringIO as StringIO
+import twisted.internet.defer as tx_defer
+import urllib2
+import urlparse
+
+#---- Constants ----------------------------------------------------------
+
+__all__ = ()
+
+# HTTPS appears to work, so we're using it (since passwords are involved);
+# however, note that urllib2's default handling of SSL does not validate
+# certificates, so this really isn't that secure
+_INDEX_URL = 'https://balanced-hangman.herokuapp.com/' #  'http://balanced-hangman.herokuapp.com/'
+
+#---- Classes ------------------------------------------------------------
+
+#=========================================================================
+class BadLoginException(Exception):
+    """
+    HTTPError abstraction to deal with protocol oddities.
+    """
+    # See comment in Transport.httpJsonRpc below.
+
+# These get a little complicated (I'll just say that "twisted" is aptly
+# named); but see <http://bit.ly/1eGFCy2> and <http://bit.ly/19rxKhR> for
+# some hints
+# @tx_defer.inlineCallbacks
+
+#=========================================================================
+class Transport(object):
+    """
+    Object to handle *synchronous* requests/responses for the hangman
+    protocol. TODO: refactor to take advantage of aio (or something
+    similar).
+    """
+
+    #---- Constructors ---------------------------------------------------
+
+    #=====================================================================
+    def __init__(self, a_index_url = _INDEX_URL, a_me_url = None, a_prisoners_url = None):
+        """
+        Constructor.
+
+        a_index_url is the index/discovery URL. If a_me_url or
+        a_prisoners_url are None, they will be automatically discovered
+        upon the first attempt to access them.
+        """
+        object.__init__(self)
+        self.__index_url = a_index_url
+        self.__me_url = a_me_url
+        self.__prisoners_url = a_prisoners_url
+
+        # TODO: I'm not sure it's such a good idea to tie the credentials
+        # to this object; it seems like it's behaving much more like an
+        # account proxy than a basic transport layer; that being said, it
+        # seems silly to keep supplying the same credentials over and over
+        # again only to keep reconstructing the Authentication header, so
+        # consider this a compromise (use Transport.clone if its
+        # necessary to support multiple credentials in the same
+        # application)
+        self.__credentials = None
+        self.__auth_hdr = None
+
+        self.__ready = False
+
+    #---- Public properties ----------------------------------------------
+
+    #=====================================================================
+    def credentials():
+        def fget(self):
+            return self.__credentials
+
+        def fset(self, a_credentials):
+            try:
+                username, password = a_credentials
+            except ( TypeError, ValueError ), e:
+                raise ValueError('bad value for credentials (%s)' % repr(a_credentials))
+
+            self.__credentials = ( username, password )
+            self.__auth_hdr = 'Basic %s' % base64.encodestring('%s:%s' % ( username, password )).strip()
+
+        def fdel(self):
+            self.__credentials = None
+            self.__auth_hdr = None
+
+        doc = """
+        The credentials associated with this object in the format
+        ( username, password ).
+        """
+
+        return locals()
+
+    credentials = property(**credentials())
+
+    #=====================================================================
+    def index_url():
+        def fget(self):
+            return self.__index_url
+
+        fset = None
+        fdel = None
+        doc = """
+        The index/discovery URL associated with this object.
+        """
+
+        return locals()
+
+    index_url = property(**index_url())
+
+    #=====================================================================
+    def me_url():
+        def fget(self):
+            if self.__me_url is None:
+                self.discover()
+
+            return self.__me_url
+
+        fset = None
+        fdel = None
+        doc = """
+        The "me" URL discovered from the index URL.
+        """
+
+        return locals()
+
+    me_url = property(**me_url())
+
+    #=====================================================================
+    def prisoners_url():
+        def fget(self):
+            if self.__prisoners_url is None:
+                self.discover()
+
+            return self.__prisoners_url
+
+        fset = None
+        fdel = None
+        doc = """
+        The "prisoners" URL discovered from the index URL.
+        """
+
+        return locals()
+
+    prisoners_url = property(**prisoners_url())
+
+    #---- Public methods -------------------------------------------------
+
+    #=====================================================================
+    def clone(self):
+        """
+        Clones this object, performing any discovery if necessary.
+        """
+        t = Transport(self.index_url, self.me_url, self.prisoners_url)
+        t.__credentials = self.__credentials
+        t.__auth_hdr = self.__auth_hdr
+
+        return t
+
+    #=====================================================================
+    def discover(self):
+        """
+        Attempts to discover the me/prisoners URLs from the index URL.
+        Silently succeeds if the me/prisoners URLs have already been
+        discovered. Raises an exception on failure.
+        """
+        url, data = self.httpJsonRpc(self.__index_url)
+        # These may be relative, they may be complete URLs; either way
+        # urlparse.urljoin does the right thing
+        self.__me_url = urlparse.urljoin(url, data['me'])
+        self.__prisoners_url = urlparse.urljoin(url, data['prisoners'])
+
+    #---- Private methods -------------------------------------------------
+
+    #=====================================================================
+    def httpJsonRpc(self, a_url, a_url_base = None, a_data = None):
+        """
+        Attempts to retrieve the result at a_url and return the parsed
+        JSON result as a python data structure. a_url could be a relative
+        URL. If a_url_base is not none, it serves as the base for any
+        relative a_url. If a_url_base is None, self.index_url serves as
+        the base for any relative a_url. If self.credentials is not None,
+        it will be blindly encoded (as "Basic") and submitted in the HTTP
+        Authentication header. As with urllib2.urlopen, if a_data is not
+        None, it is used for HTTP POST data. Otherwise, a GET is
+        performed. Returns ( url, json_data ) on success. Note, the
+        returned url is the actual URL used, and could be different from
+        a_url, if a_url was relative. Raises a BadLoginException where
+        a_auth was incorrect or missing (but needed).
+        """
+        if a_url_base is None:
+            url_base = self.index_url
+        else:
+            url_base = a_url_base
+            
+        url = urlparse.urljoin(url_base, a_url)
+        req = urllib2.Request(url)
+
+        if self.__auth_hdr is not None:
+            req.add_header('Authorization', self.__auth_hdr)
+
+        try:
+            # This just happens to work, as the presence/absence of the
+            # data argument determines whether the method is a POST/GET,
+            # respectively. The protocol does not appear to use PUT or
+            # DELETE anywhere. Otherwise, we'd be doing something
+            # different.
+            res = urllib2.urlopen(req, data = a_data)
+        except urllib2.HTTPError, e:
+            # HACK: we treat 401s and 403s the same with this particular
+            # application (see comment above)
+            if e.code == 401 \
+                    or e.code == 403:
+                raise BadLoginException(e)
+
+            raise
+
+        raw_data = res.read()
+
+        try:
+            json_data = json.loads(raw_data)
+        except ValueError:
+            # We got a 200, but what we got back in the payload wasn't
+            # JSON, so let's kludge together an intermediary object
+            json_data = { '_nojson_data': raw_data, '_nojson_data_type': res.headers.get('content-type', 'text/plain') }
+
+        # Handle the special case where a null JSON object is actually a
+        # hint that a login is needed (should probably be a 401; see
+        # comment above)
+        if json_data is None:
+            raise BadLoginException()
+
+        return url, json_data
