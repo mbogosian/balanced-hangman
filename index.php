@@ -24,14 +24,14 @@
         <div id="nojs" class="overlay">
             <p><a href="http://www.enable-javascript.com/">Javascript must be enabled</a> for this application to work properly.</p>
 
-            <p>If you are seeing this message from Internet Explorer, this is <a href="https://github.com/mbogosian/balanced-hangman/issues/4" target="_target">a known issue</a>. Until it is resolved, please use <a href="http://mzl.la/1gRGot0" target="_blank">Firefox</a> or <a href="http://bit.ly/LVhB9B" target="_blank">Chrome</a> instead.</p>
+            <p>If you are seeing this message from Internet Explorer, this is <a href="https://github.com/posita/balanced-hangman/issues/4" target="_target">a known issue</a>. Until it is resolved, please use <a href="http://mzl.la/1gRGot0" target="_blank">Firefox</a> or <a href="http://bit.ly/LVhB9B" target="_blank">Chrome</a> instead.</p>
         </div>
 
         <div id="main">
             <div id="main_bg"></div>
 
             <div id="content">
-                <h1>&ldquo;<a href="https://github.com/mbogosian/balanced-hangman" target="_blank">BaHaMan!</a>&rdquo;</h1>
+                <h1>&ldquo;<a href="https://github.com/posita/balanced-hangman" target="_blank">BaHaMan!</a>&rdquo;</h1>
 
                 <h2>
                     by <a href="http://linkd.in/1fBEffR" target="_blank">Matt Bogosian</a><br>

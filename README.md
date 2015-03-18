@@ -20,10 +20,10 @@ Marshall&rsquo;s [GitHub Gist page](http://bit.ly/1kqF5R0)).
 You can [try out out for yourself](http://bit.ly/1iw9P17). I highly
 recommend using a recent version of [Firefox](http://mzl.la/1gRGot0) or
 [Chrome](http://bit.ly/LVhB9B). I can confirm [it doesn&rsquo;t work on IE
-8](https://github.com/mbogosian/balanced-hangman/issues/4). I don&rsquo;t
+8](https://github.com/posita/balanced-hangman/issues/4). I don&rsquo;t
 have access to other versions, so I haven&rsquo;t been able to check
 anything else. Mobile is also [currently
-broken](https://github.com/mbogosian/balanced-hangman/issues/11).
+broken](https://github.com/posita/balanced-hangman/issues/11).
 
 Installation
 ------------
@@ -32,7 +32,7 @@ Clone the repository and open `index.php`:
 
     # On server (e.g., Apache with PHP)
     $ cd ~/public_html # For example
-    $ git clone https://github.com/mbogosian/balanced-hangman
+    $ git clone https://github.com/posita/balanced-hangman
     $ chmod -R a+Xr balanced-hangman ; chmod -R o-rstwx balanced-hangman/.git
     ...
 
@@ -42,7 +42,7 @@ Clone the repository and open `index.php`:
 Or on a reasonably recent version of OS X (I&rsquo;m developing on 10.6):
 
     $ cd ~/Sites # For example
-    $ git clone https://github.com/mbogosian/balanced-hangman
+    $ git clone https://github.com/posita/balanced-hangman
     $ chmod -R a+Xr balanced-hangman ; chmod -R o-rstwx balanced-hangman/.git
     $ open http://localhost/~[username]/balanced-hangman/index.php
 
@@ -50,7 +50,7 @@ Known Issues
 ------------
 
 Known bugs are [tracked on
-GitHub](https://github.com/mbogosian/balanced-hangman/issues).
+GitHub](https://github.com/posita/balanced-hangman/issues).
 
 - I will reiterate this again later, but I am *not* very experienced in UI
   design/implementation (see [Notes On The
